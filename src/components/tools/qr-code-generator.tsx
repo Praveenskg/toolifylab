@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import NextImage from 'next/image';
 import QRCode from 'qrcode';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function QRCodeGenerator() {
   const [text, setText] = useState('');
@@ -69,75 +69,90 @@ export default function QRCodeGenerator() {
     }
   };
 
-  const generateQRCode = useCallback(async () => {
-    if (!text.trim()) {
-      setQrCodeDataUrl('');
-      return;
-    }
-
-    setIsGenerating(true);
-    try {
-      const options = {
-        width: size[0],
-        margin: 2,
-        color: {
-          dark: foregroundColor,
-          light: backgroundColor,
-        },
-        errorCorrectionLevel: errorCorrection as 'L' | 'M' | 'Q' | 'H',
-      };
-
-      const dataUrl = await QRCode.toDataURL(text, options);
-
-      // If logo is present, overlay it on the QR code
-      if (logoImage) {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          canvas.width = size[0];
-          canvas.height = size[0];
-
-          // Draw QR code
-          const qrImg = new Image();
-          qrImg.onload = () => {
-            ctx.drawImage(qrImg, 0, 0, size[0], size[0]);
-
-            // Draw logo in center
-            const logoImg = new Image();
-            logoImg.onload = () => {
-              const logoWidth = (size[0] * logoSize[0]) / 100;
-              const logoHeight = (size[0] * logoSize[0]) / 100;
-              const logoX = (size[0] - logoWidth) / 2;
-              const logoY = (size[0] - logoHeight) / 2;
-
-              // Add white background for logo
-              ctx.fillStyle = backgroundColor;
-              ctx.fillRect(logoX - 2, logoY - 2, logoWidth + 4, logoHeight + 4);
-
-              ctx.drawImage(logoImg, logoX, logoY, logoWidth, logoHeight);
-              setQrCodeDataUrl(canvas.toDataURL());
-              setIsGenerating(false);
-            };
-            logoImg.src = logoImage;
-          };
-          qrImg.src = dataUrl;
-        }
-      } else {
-        setQrCodeDataUrl(dataUrl);
-        setIsGenerating(false);
-      }
-    } catch {
-      // Error generating QR code
-      setIsGenerating(false);
-    }
-  }, [text, size, errorCorrection, foregroundColor, backgroundColor, logoImage, logoSize]);
-
-  // Generate QR code on component mount
+  // Generate QR code when dependencies change
   useEffect(() => {
-    if (text.trim()) {
-      generateQRCode();
-    }
-  }, []); // Empty dependency array - only run on mount
+    let isCancelled = false;
+
+    const generateQRCode = async () => {
+      if (!text.trim()) {
+        if (!isCancelled) {
+          setQrCodeDataUrl('');
+        }
+        return;
+      }
+
+      if (!isCancelled) {
+        setIsGenerating(true);
+      }
+
+      try {
+        const options = {
+          width: size[0],
+          margin: 2,
+          color: {
+            dark: foregroundColor,
+            light: backgroundColor,
+          },
+          errorCorrectionLevel: errorCorrection as 'L' | 'M' | 'Q' | 'H',
+        };
+
+        const dataUrl = await QRCode.toDataURL(text, options);
+
+        if (isCancelled) return;
+
+        // If logo is present, overlay it on the QR code
+        if (logoImage) {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            canvas.width = size[0];
+            canvas.height = size[0];
+
+            // Draw QR code
+            const qrImg = new Image();
+            qrImg.onload = () => {
+              if (isCancelled) return;
+              ctx.drawImage(qrImg, 0, 0, size[0], size[0]);
+
+              // Draw logo in center
+              const logoImg = new Image();
+              logoImg.onload = () => {
+                if (isCancelled) return;
+                const logoWidth = (size[0] * logoSize[0]) / 100;
+                const logoHeight = (size[0] * logoSize[0]) / 100;
+                const logoX = (size[0] - logoWidth) / 2;
+                const logoY = (size[0] - logoHeight) / 2;
+
+                // Add white background for logo
+                ctx.fillStyle = backgroundColor;
+                ctx.fillRect(logoX - 2, logoY - 2, logoWidth + 4, logoHeight + 4);
+
+                ctx.drawImage(logoImg, logoX, logoY, logoWidth, logoHeight);
+                setQrCodeDataUrl(canvas.toDataURL());
+                setIsGenerating(false);
+              };
+              logoImg.src = logoImage;
+            };
+            qrImg.src = dataUrl;
+          }
+        } else {
+          setQrCodeDataUrl(dataUrl);
+          setIsGenerating(false);
+        }
+      } catch {
+        // Error generating QR code
+        if (!isCancelled) {
+          setIsGenerating(false);
+        }
+      }
+    };
+
+    generateQRCode();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [text, size, errorCorrection, foregroundColor, backgroundColor, logoImage, logoSize]);
 
   const downloadQRCode = () => {
     if (!qrCodeDataUrl) return;
@@ -329,14 +344,13 @@ export default function QRCodeGenerator() {
                   <p className='text-muted-foreground text-sm'>Generating QR Code...</p>
                 </div>
               ) : qrCodeDataUrl ? (
-                <div className='space-y-4 text-center'>
+                <div className='space-y-4 py-2 text-center'>
                   <NextImage
                     src={qrCodeDataUrl}
                     alt='Generated QR Code'
                     width={280}
                     height={280}
                     className='mx-auto h-auto max-w-full rounded-lg shadow-lg'
-                    style={{ maxHeight: '280px' }}
                   />
                   <div className='flex items-center justify-center gap-2'>
                     <Button
