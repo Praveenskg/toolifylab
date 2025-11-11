@@ -1,8 +1,24 @@
 'use client';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useMemo } from 'react';
 
 export function HeroSection() {
+  // Generate stable random values for particles
+  const particles = useMemo(
+    () =>
+      Array.from({ length: 20 }, (_, i) => ({
+        id: i,
+        x: Math.random() * 100 - 50,
+        y: Math.random() * 100 - 50,
+        duration: Math.random() * 10 + 10,
+        delay: Math.random() * 5,
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+      })),
+    [],
+  );
+
   return (
     <section className='from-background via-primary/5 to-background relative w-full overflow-hidden bg-linear-to-br py-16 sm:py-24 lg:py-32'>
       {/* Advanced animated background elements */}
@@ -11,24 +27,24 @@ export function HeroSection() {
         <div className='absolute inset-0 bg-linear-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10' />
 
         {/* Floating particles */}
-        {[...Array(20)].map((_, i) => (
+        {particles.map((particle) => (
           <motion.div
-            key={i}
+            key={particle.id}
             className='bg-primary/30 absolute h-1 w-1 rounded-full'
             animate={{
-              x: [0, Math.random() * 100 - 50],
-              y: [0, Math.random() * 100 - 50],
+              x: [0, particle.x],
+              y: [0, particle.y],
               opacity: [0, 1, 0],
             }}
             transition={{
-              duration: Math.random() * 10 + 10,
+              duration: particle.duration,
               repeat: Infinity,
-              delay: Math.random() * 5,
+              delay: particle.delay,
               ease: 'easeInOut',
             }}
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
             }}
           />
         ))}

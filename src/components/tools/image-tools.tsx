@@ -136,11 +136,22 @@ function BackgroundRemover({ selectedImage }: { selectedImage: File | null }) {
   const [imageUrl, setImageUrl] = useState<string>('');
 
   useEffect(() => {
-    if (selectedImage) {
-      const url = URL.createObjectURL(selectedImage);
-      setImageUrl(url);
+    if (!selectedImage) {
+      if (imageUrl) {
+        URL.revokeObjectURL(imageUrl);
+        setImageUrl('');
+      }
       setProcessedImageUrl('');
+      return;
     }
+
+    const url = URL.createObjectURL(selectedImage);
+    setImageUrl(url);
+    setProcessedImageUrl('');
+
+    return () => {
+      URL.revokeObjectURL(url);
+    };
   }, [selectedImage]);
 
   const removeBackground = () => {
@@ -184,6 +195,9 @@ function BackgroundRemover({ selectedImage }: { selectedImage: File | null }) {
 
         canvas.toBlob((blob) => {
           if (blob) {
+            if (processedImageUrl) {
+              URL.revokeObjectURL(processedImageUrl);
+            }
             const url = URL.createObjectURL(blob);
             setProcessedImageUrl(url);
             setIsProcessing(false);
@@ -346,25 +360,35 @@ function ImageCropper({ selectedImage }: { selectedImage: File | null }) {
   const [canvasRef, setCanvasRef] = useState<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-    if (selectedImage) {
-      const url = URL.createObjectURL(selectedImage);
-      setImageUrl(url);
-
-      const img = new window.Image();
-      img.onload = () => {
-        setImageDimensions({ width: img.width, height: img.height });
-        // Set initial crop area to center
-        const centerX = img.width / 2 - 100;
-        const centerY = img.height / 2 - 100;
-        setCropArea({
-          x: Math.max(0, centerX),
-          y: Math.max(0, centerY),
-          width: Math.min(200, img.width),
-          height: Math.min(200, img.height),
-        });
-      };
-      img.src = url;
+    if (!selectedImage) {
+      if (imageUrl) {
+        URL.revokeObjectURL(imageUrl);
+        setImageUrl('');
+      }
+      return;
     }
+
+    const url = URL.createObjectURL(selectedImage);
+    setImageUrl(url);
+
+    const img = new window.Image();
+    img.onload = () => {
+      setImageDimensions({ width: img.width, height: img.height });
+      // Set initial crop area to center
+      const centerX = img.width / 2 - 100;
+      const centerY = img.height / 2 - 100;
+      setCropArea({
+        x: Math.max(0, centerX),
+        y: Math.max(0, centerY),
+        width: Math.min(200, img.width),
+        height: Math.min(200, img.height),
+      });
+    };
+    img.src = url;
+
+    return () => {
+      URL.revokeObjectURL(url);
+    };
   }, [selectedImage]);
 
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -433,7 +457,8 @@ function ImageCropper({ selectedImage }: { selectedImage: File | null }) {
           const nameWithoutExt = originalName.split('.').slice(0, -1).join('.');
           a.download = `${nameWithoutExt}_cropped.png`;
           a.click();
-          URL.revokeObjectURL(url);
+          // Revoke URL after a short delay to ensure download starts
+          setTimeout(() => URL.revokeObjectURL(url), 100);
         }
       }, 'image/png');
     };
@@ -545,19 +570,33 @@ function ImageFilters({ selectedImage }: { selectedImage: File | null }) {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
   useEffect(() => {
-    if (selectedImage) {
-      const url = URL.createObjectURL(selectedImage);
-      setImageUrl(url);
-      setProcessedImageUrl('');
-      setFilters({
-        brightness: 100,
-        contrast: 100,
-        saturation: 100,
-        blur: 0,
-        grayscale: 0,
-        sepia: 0,
-      });
+    if (!selectedImage) {
+      if (imageUrl) {
+        URL.revokeObjectURL(imageUrl);
+        setImageUrl(null);
+      }
+      if (processedImageUrl) {
+        URL.revokeObjectURL(processedImageUrl);
+        setProcessedImageUrl('');
+      }
+      return;
     }
+
+    const url = URL.createObjectURL(selectedImage);
+    setImageUrl(url);
+    setProcessedImageUrl('');
+    setFilters({
+      brightness: 100,
+      contrast: 100,
+      saturation: 100,
+      blur: 0,
+      grayscale: 0,
+      sepia: 0,
+    });
+
+    return () => {
+      URL.revokeObjectURL(url);
+    };
   }, [selectedImage]);
 
   const applyFilters = () => {
@@ -626,6 +665,9 @@ function ImageFilters({ selectedImage }: { selectedImage: File | null }) {
         canvas.toBlob(
           (blob) => {
             if (blob) {
+              if (processedImageUrl) {
+                URL.revokeObjectURL(processedImageUrl);
+              }
               const url = URL.createObjectURL(blob);
               setProcessedImageUrl(url);
               setIsProcessing(false);

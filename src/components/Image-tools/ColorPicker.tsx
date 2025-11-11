@@ -12,7 +12,12 @@ export default function ColorPicker({ selectedImage }: { selectedImage: File | n
   const [isExtracted, setIsExtracted] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!selectedImage) return;
+    if (!selectedImage) {
+      setImageUrl('');
+      setColors([]);
+      setSelectedColor('');
+      return;
+    }
 
     const url = URL.createObjectURL(selectedImage);
     setImageUrl(url);

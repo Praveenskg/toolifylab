@@ -12,28 +12,33 @@ export default function MetadataViewer({ selectedImage }: { selectedImage: File 
   const [exifData, setExifData] = useState<ExifData | null>(null);
 
   useEffect(() => {
-    if (selectedImage) {
-      const url = URL.createObjectURL(selectedImage);
-      setImageUrl(url);
-
-      const img = new window.Image();
-      img.onload = () => {
-        setImageDimensions({ width: img.width, height: img.height });
-      };
-      img.src = url;
-
-      exifr
-        .parse(selectedImage)
-        .then((data) => {
-          console.table(data);
-          setExifData(data as ExifData);
-        })
-        .catch(console.error);
-
-      return () => {
-        URL.revokeObjectURL(url);
-      };
+    if (!selectedImage) {
+      setImageUrl('');
+      setImageDimensions(null);
+      setExifData(null);
+      return;
     }
+
+    const url = URL.createObjectURL(selectedImage);
+    setImageUrl(url);
+
+    const img = new window.Image();
+    img.onload = () => {
+      setImageDimensions({ width: img.width, height: img.height });
+    };
+    img.src = url;
+
+    exifr
+      .parse(selectedImage)
+      .then((data) => {
+        console.table(data);
+        setExifData(data as ExifData);
+      })
+      .catch(console.error);
+
+    return () => {
+      URL.revokeObjectURL(url);
+    };
   }, [selectedImage]);
 
   const getAspectRatio = () => {
