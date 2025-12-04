@@ -1,3 +1,61 @@
-# Ignore artifacts:
+# Dependencies
+node_modules
+.pnp
+.pnp.*
+.yarn/*
+
+# Build outputs
+.next
+out
 build
+dist
+*.tsbuildinfo
+
+# Generated files
+next-env.d.ts
+
+# Testing
 coverage
+.nyc_output
+*.lcov
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment files
+.env
+.env*.local
+
+# Cache directories
+.cache
+.parcel-cache
+.eslintcache
+.turbo
+
+# Lock files (optional - some teams prefer to format these)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Public assets (images, fonts, etc.)
+public/sw*
+public/swe-worker*
+
+# Vercel
+.vercel
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.vscode
+.idea
+
+# Misc
+*.pem
