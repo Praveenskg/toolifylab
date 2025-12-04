@@ -1,7 +1,7 @@
 name: Bug Report
 description: Report a bug or issue with one of the tools
-title: '[BUG] <tool-name>: Brief description of the bug'
-labels: ['bug', 'triage']
+title: "[BUG] <tool-name>: Brief description of the bug"
+labels: ["bug", "triage"]
 body:
   - type: markdown
     attributes:
@@ -100,7 +100,7 @@ body:
     attributes:
       label: Browser Version
       description: What version of the browser are you using? (e.g., Chrome 91.0.4472.124)
-      placeholder: 'e.g., Chrome 91.0.4472.124'
+      placeholder: "e.g., Chrome 91.0.4472.124"
 
   - type: dropdown
     id: device-type

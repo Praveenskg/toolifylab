@@ -7,28 +7,99 @@ if [ -z "$STAGED_FILES" ]; then
   exit 0
 fi
 
-echo "🔍 Running pre-commit checks..."
+echo "Running pre-commit checks..."
+
+# Step 0: Check for secrets and sensitive files
+echo "Checking for secrets and sensitive files..."
+# Match actual sensitive file patterns, but exclude legitimate component files
+# Patterns to match: .env, .pem, .key, .secret, password.txt, api_key, secret_key, etc.
+# Exclude: password-generator component files (legitimate code files)
+SENSITIVE_PATTERNS="\.env|\.pem|\.key$|\.secret$"
+# Check for sensitive file extensions
+MATCHING_FILES=$(echo "$STAGED_FILES" | grep -qiE "$SENSITIVE_PATTERNS" || true)
+# Check for suspicious file names (password.txt, api_key.json, etc.) but exclude component files
+SUSPICIOUS_NAMES=$(echo "$STAGED_FILES" | grep -qiE "(password|api[_-]?key|secret[_-]?key|private[_-]?key)(\.(txt|json|yml|yaml|config|conf)|$)" || true)
+# Filter out legitimate component files
+if [ -n "$SUSPICIOUS_NAMES" ]; then
+  SUSPICIOUS_NAMES=$(echo "$SUSPICIOUS_NAMES" | grep -vE "(password-generator|password-generator\.(tsx|ts|jsx|js))" || true)
+fi
+if [ -n "$MATCHING_FILES" ] || [ -n "$SUSPICIOUS_NAMES" ]; then
+  echo "❌ ERROR: Potential secrets or sensitive files detected in staged files!"
+  echo "Please remove sensitive files before committing."
+  echo "Staged files matching patterns:"
+  [ -n "$MATCHING_FILES" ] && echo "$MATCHING_FILES"
+  [ -n "$SUSPICIOUS_NAMES" ] && echo "$SUSPICIOUS_NAMES"
+  exit 1
+fi
+
+# Check for .env files specifically
+if echo "$STAGED_FILES" | grep -qE "\.env"; then
+  echo "❌ ERROR: .env files detected! These should not be committed."
+  echo "Please add .env* to .gitignore and remove from staging."
+  exit 1
+fi
+
+# Step 0.5: Check for large files (>10MB)
+echo "Checking for large files..."
+LARGE_FILES=""
+for file in $STAGED_FILES; do
+  if [ -f "$file" ]; then
+    # Cross-platform file size check
+    if command -v stat >/dev/null 2>&1; then
+      SIZE=$(stat -f%z "$file" 2>/dev/null || stat -c%s "$file" 2>/dev/null || echo "0")
+    else
+      SIZE=$(wc -c < "$file" 2>/dev/null || echo "0")
+    fi
+    if [ "$SIZE" -gt 10485760 ] 2>/dev/null; then
+      LARGE_FILES="${LARGE_FILES}${file}\n"
+    fi
+  fi
+done
+
+if [ -n "$LARGE_FILES" ]; then
+  echo "❌ ERROR: Large files (>10MB) detected:"
+  echo -e "$LARGE_FILES"
+  echo "Please use Git LFS or remove these files."
+  exit 1
+fi
+
+# Step 0.6: Check package-lock.json sync
+echo "Checking package-lock.json sync..."
+if echo "$STAGED_FILES" | grep -q "package.json"; then
+  if ! echo "$STAGED_FILES" | grep -q "package-lock.json"; then
+    echo "⚠️  WARNING: package.json changed but package-lock.json not staged."
+    echo "Run 'npm install' to update package-lock.json"
+    read -p "Continue anyway? (y/N) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+      exit 1
+    fi
+  fi
+fi
 
 # Step 1: Format code with Prettier (only on supported files)
-echo "📝 Formatting code with Prettier..."
+echo "Formatting code with Prettier..."
 FORMATTABLE_FILES=$(echo "$STAGED_FILES" | grep -E '\.(js|jsx|ts|tsx|json|md|css|html)$' || true)
 
 if [ -n "$FORMATTABLE_FILES" ]; then
-  echo "$FORMATTABLE_FILES" | xargs --no-run-if-empty npx prettier --write --ignore-unknown
-
-  # Check if prettier made any changes and add them
-  if ! git diff --quiet -- "$FORMATTABLE_FILES" 2>/dev/null; then
-    echo "📝 Prettier made changes, adding formatted files..."
-    echo "$FORMATTABLE_FILES" | xargs git add
+  # Check formatting first
+  if echo "$FORMATTABLE_FILES" | xargs --no-run-if-empty npx prettier --check --ignore-unknown >/dev/null 2>&1; then
+    echo "Code already properly formatted"
   else
-    echo "✅ Code already properly formatted"
+    echo "$FORMATTABLE_FILES" | xargs --no-run-if-empty npx prettier --write --ignore-unknown
+
+    # Check if prettier made any changes and add them
+    if ! git diff --quiet -- "$FORMATTABLE_FILES" 2>/dev/null; then
+      echo "Prettier made changes, adding formatted files..."
+      echo "$FORMATTABLE_FILES" | xargs git add
+    fi
   fi
 else
-  echo "ℹ️ No formattable files in staged changes"
+  echo "No formattable files in staged changes"
 fi
 
 # Step 2: ESLint auto fix (only on JS/TS files)
-echo "🔧 Running ESLint auto-fix..."
+echo "Running ESLint auto-fix..."
 LINTABLE_FILES=$(echo "$STAGED_FILES" | grep -E '\.(js|jsx|ts|tsx)$' || true)
 
 if [ -n "$LINTABLE_FILES" ]; then
@@ -36,39 +107,67 @@ if [ -n "$LINTABLE_FILES" ]; then
 
   # Check if eslint made any changes and add them
   if ! git diff --quiet -- "$LINTABLE_FILES" 2>/dev/null; then
-    echo "🔧 ESLint made changes, adding fixed files..."
+    echo "ESLint made changes, adding fixed files..."
     echo "$LINTABLE_FILES" | xargs git add
   fi
 else
-  echo "ℹ️ No lintable files in staged changes"
+  echo "No lintable files in staged changes"
 fi
 
 # Step 3: Final ESLint check
-echo "✅ Final lint check..."
+echo "Final lint check..."
 if [ -n "$LINTABLE_FILES" ]; then
   echo "$LINTABLE_FILES" | xargs --no-run-if-empty npx eslint --max-warnings=50 || {
     echo "❌ ESLint errors found. Please fix them before committing."
-    echo "💡 Run 'npm run lint:fix' to auto-fix issues"
+    echo "Run 'npm run lint' to see errors or 'npm run lint:fix' to auto-fix"
     exit 1
   }
 else
-  echo "ℹ️ No lintable files to check"
+  echo "No lintable files to check"
 fi
 
-# Step 4: TypeScript check
-echo "🔍 Type checking..."
-npx tsc --noEmit || {
-  echo "❌ TypeScript errors found. Please fix them before committing."
-  echo "💡 Run 'npm run type-check' to see detailed errors"
-  exit 1
-}
+# Step 4: TypeScript check (only if TS files are staged)
+echo "Type checking..."
+TS_FILES=$(echo "$STAGED_FILES" | grep -E '\.(ts|tsx)$' || true)
 
-# Step 5: Security audit
-echo "🔒 Security audit..."
-npm audit --audit-level=moderate || {
-  echo "❌ Security vulnerabilities found. Please fix them before committing."
-  echo "💡 Run 'npm audit fix' to auto-fix issues"
-  exit 1
-}
+if [ -n "$TS_FILES" ]; then
+  # Use incremental build for faster checks
+  npx tsc --noEmit --incremental || {
+    echo "❌ TypeScript errors found. Please fix them before committing."
+    echo "Run 'npm run type-check' to see detailed errors"
+    exit 1
+  }
+else
+  echo "No TypeScript files in staged changes, skipping type check"
+fi
+
+# Step 5: Build check (only if source files changed)
+echo "Build check..."
+SOURCE_FILES=$(echo "$STAGED_FILES" | grep -E '\.(js|jsx|ts|tsx|json)$' | grep -vE '\.(test|spec)\.' || true)
+
+if [ -n "$SOURCE_FILES" ]; then
+  echo "Source files changed, running build check..."
+  # Quick build check - only verify it compiles, don't output
+  npm run build >/dev/null 2>&1 || {
+    echo "❌ Build failed! Please fix build errors before committing."
+    echo "Run 'npm run build' to see detailed errors"
+    exit 1
+  }
+  echo "Build check passed"
+else
+  echo "No source files changed, skipping build check"
+fi
+
+# Step 6: Security audit (only on package.json changes)
+echo "Security audit..."
+if echo "$STAGED_FILES" | grep -q "package.json\|package-lock.json"; then
+  npm audit --audit-level=moderate || {
+    echo "❌ Security vulnerabilities found. Please fix them before committing."
+    echo "Run 'npm audit fix' to auto-fix issues (or 'npm audit' to see details)"
+    exit 1
+  }
+else
+  echo "No package files changed, skipping security audit"
+fi
 
 echo "✅ All pre-commit checks passed!"

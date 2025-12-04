@@ -1,7 +1,7 @@
 name: Security Issue
 description: Report a security vulnerability
-title: '[SECURITY] Brief description of the security issue'
-labels: ['security']
+title: "[SECURITY] Brief description of the security issue"
+labels: ["security"]
 body:
   - type: markdown
     attributes:

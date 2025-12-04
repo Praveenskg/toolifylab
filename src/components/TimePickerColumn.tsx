@@ -1,8 +1,8 @@
 // components/TimePickerColumn.tsx
-'use client';
+"use client";
 
-import { cn } from '@/lib/utils';
-import React, { useEffect, useRef } from 'react';
+import { cn } from "@/lib/utils";
+import React, { useEffect, useRef } from "react";
 
 interface TimePickerColumnProps {
   label: string;
@@ -35,24 +35,24 @@ export const TimePickerColumn: React.FC<TimePickerColumnProps> = ({
   }, [middleIndex]);
 
   return (
-    <div className='flex w-full flex-col items-center'>
-      <span className='text-muted-foreground mb-1 text-sm font-medium'>{label}</span>
+    <div className="flex w-full flex-col items-center">
+      <span className="text-muted-foreground mb-1 text-sm font-medium">{label}</span>
 
       <div
         ref={ref}
         id={id}
-        className='scrollbar-hide relative h-32 w-full max-w-[80px] snap-y snap-mandatory overflow-y-scroll p-2'
+        className="scrollbar-hide relative h-32 w-full max-w-[80px] snap-y snap-mandatory overflow-y-scroll p-2"
       >
         {fullList.map((val, i) => (
           <div
             key={i}
-            className={cn('cursor-pointer snap-center py-1 text-center transition-colors', {
-              'bg-primary rounded text-white': val === value,
-              'text-muted-foreground': val !== value,
+            className={cn("cursor-pointer snap-center py-1 text-center transition-colors", {
+              "bg-primary rounded text-white": val === value,
+              "text-muted-foreground": val !== value,
             })}
             onClick={() => onChange(val)}
           >
-            {String(val).padStart(2, '0')}
+            {String(val).padStart(2, "0")}
           </div>
         ))}
       </div>

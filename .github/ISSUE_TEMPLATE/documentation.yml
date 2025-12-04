@@ -1,7 +1,7 @@
 name: Documentation Issue
 description: Report issues with documentation, README, or help content
-title: '[DOCS] Brief description of the documentation issue'
-labels: ['documentation', 'triage']
+title: "[DOCS] Brief description of the documentation issue"
+labels: ["documentation", "triage"]
 body:
   - type: markdown
     attributes:
@@ -45,7 +45,7 @@ body:
     attributes:
       label: Current Documentation
       description: Quote or describe the current documentation that's problematic
-      placeholder: 'Copy the relevant text from the documentation here...'
+      placeholder: "Copy the relevant text from the documentation here..."
     validations:
       required: true
 
@@ -54,7 +54,7 @@ body:
     attributes:
       label: Suggested Fix
       description: How should the documentation be improved?
-      placeholder: 'Provide your suggested correction or improvement...'
+      placeholder: "Provide your suggested correction or improvement..."
     validations:
       required: true
 
@@ -63,7 +63,7 @@ body:
     attributes:
       label: Location
       description: Where is this documentation located? (file path, URL, section name, etc.)
-      placeholder: 'e.g., README.md#installation, or /docs/api-reference.md'
+      placeholder: "e.g., README.md#installation, or /docs/api-reference.md"
 
   - type: textarea
     id: additional-context

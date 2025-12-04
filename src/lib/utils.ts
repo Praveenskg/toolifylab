@@ -1,21 +1,21 @@
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 // Currency formatting
-export function formatCurrency(amount: number, currency = 'INR', locale = 'en-IN'): string {
+export function formatCurrency(amount: number, currency = "INR", locale = "en-IN"): string {
   return new Intl.NumberFormat(locale, {
-    style: 'currency',
+    style: "currency",
     currency,
   }).format(amount);
 }
 
 // Number formatting
 export function formatNumber(num: number, decimals = 2): string {
-  return new Intl.NumberFormat('en-IN', {
+  return new Intl.NumberFormat("en-IN", {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   }).format(num);
@@ -28,11 +28,11 @@ export function formatPercentage(value: number, decimals = 2): string {
 
 // Date formatting
 export function formatDate(date: Date | string, options?: Intl.DateTimeFormatOptions): string {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return new Intl.DateTimeFormat('en-IN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+  return new Intl.DateTimeFormat("en-IN", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
     ...options,
   }).format(dateObj);
 }
@@ -55,7 +55,7 @@ export function validateEmail(email: string): boolean {
 // Debounce function
 export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
-  wait: number,
+  wait: number
 ): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout;
   return (...args: Parameters<T>) => {
@@ -67,7 +67,7 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
 // Throttle function
 export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
-  limit: number,
+  limit: number
 ): (...args: Parameters<T>) => void {
   let inThrottle: boolean;
   return (...args: Parameters<T>) => {
@@ -81,7 +81,7 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
 
 // Local storage utilities with enhanced error handling
 export function getFromStorage<T>(key: string, defaultValue: T): T {
-  if (typeof window === 'undefined') return defaultValue;
+  if (typeof window === "undefined") return defaultValue;
 
   try {
     const item = window.localStorage.getItem(key);
@@ -101,7 +101,7 @@ export function getFromStorage<T>(key: string, defaultValue: T): T {
 }
 
 export function setToStorage<T>(key: string, value: T): boolean {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === "undefined") return false;
 
   try {
     const serialized = JSON.stringify(value);
@@ -128,7 +128,7 @@ export function setToStorage<T>(key: string, value: T): boolean {
 }
 
 export function removeFromStorage(key: string): boolean {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === "undefined") return false;
 
   try {
     window.localStorage.removeItem(key);
@@ -140,11 +140,11 @@ export function removeFromStorage(key: string): boolean {
 
 // Check if localStorage is available and working
 export function isStorageAvailable(): boolean {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === "undefined") return false;
 
   try {
-    const testKey = '__storage_test__';
-    window.localStorage.setItem(testKey, 'test');
+    const testKey = "__storage_test__";
+    window.localStorage.setItem(testKey, "test");
     window.localStorage.removeItem(testKey);
     return true;
   } catch {
@@ -160,15 +160,15 @@ export async function copyToClipboard(text: string): Promise<boolean> {
       return true;
     } else {
       // Fallback for older browsers
-      const textArea = document.createElement('textarea');
+      const textArea = document.createElement("textarea");
       textArea.value = text;
-      textArea.style.position = 'fixed';
-      textArea.style.left = '-999999px';
-      textArea.style.top = '-999999px';
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
       document.body.appendChild(textArea);
       textArea.focus();
       textArea.select();
-      const result = document.execCommand('copy');
+      const result = document.execCommand("copy");
       textArea.remove();
       return result;
     }
@@ -186,7 +186,7 @@ export function generateId(): string {
 // Calculate age
 export function calculateAge(
   birthDate: Date,
-  targetDate: Date = new Date(),
+  targetDate: Date = new Date()
 ): {
   years: number;
   months: number;
@@ -209,7 +209,7 @@ export function calculateAge(
   }
 
   const totalDays = Math.floor(
-    (targetDate.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24),
+    (targetDate.getTime() - birthDate.getTime()) / (1000 * 60 * 60 * 24)
   );
 
   return { years, months, days, totalDays };
@@ -219,7 +219,7 @@ export function calculateAge(
 export function calculateEMI(
   principal: number,
   rate: number,
-  tenure: number,
+  tenure: number
 ): {
   emi: number;
   totalInterest: number;

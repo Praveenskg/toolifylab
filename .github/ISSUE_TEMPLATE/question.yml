@@ -1,7 +1,7 @@
 name: Question / Support
 description: Ask a question or request help
-title: '[QUESTION] Brief description of your question'
-labels: ['question', 'triage']
+title: "[QUESTION] Brief description of your question"
+labels: ["question", "triage"]
 body:
   - type: markdown
     attributes:

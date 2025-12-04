@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowUp } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowUp } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function ScrollProgressCircle() {
   const [scroll, setScroll] = useState(0);
@@ -17,19 +17,19 @@ export default function ScrollProgressCircle() {
       setVisible(scrollTop > 300);
     };
 
-    window.addEventListener('scroll', updateScroll);
-    return () => window.removeEventListener('scroll', updateScroll);
+    window.addEventListener("scroll", updateScroll);
+    return () => window.removeEventListener("scroll", updateScroll);
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const getColor = () => {
-    if (scroll < 25) return '#3b82f6';
-    if (scroll < 50) return '#10b981';
-    if (scroll < 75) return '#facc15';
-    return '#ef4444';
+    if (scroll < 25) return "#3b82f6";
+    if (scroll < 50) return "#10b981";
+    if (scroll < 75) return "#facc15";
+    return "#ef4444";
   };
 
   return (
@@ -46,39 +46,39 @@ export default function ScrollProgressCircle() {
             y: [-2, 0, -2],
             transition: {
               repeat: Infinity,
-              repeatType: 'loop',
+              repeatType: "loop",
               duration: 0.6,
-              ease: 'easeInOut',
+              ease: "easeInOut",
             },
           }}
-          className='bg-background border-border fixed right-5 bottom-5 z-50 flex h-12 w-12 items-center justify-center rounded-full border shadow-xl sm:right-8 sm:bottom-8 sm:h-14 sm:w-14'
-          aria-label='Scroll to top'
+          className="bg-background border-border fixed right-5 bottom-5 z-50 flex h-12 w-12 items-center justify-center rounded-full border shadow-xl sm:right-8 sm:bottom-8 sm:h-14 sm:w-14"
+          aria-label="Scroll to top"
         >
-          <svg className='absolute h-full w-full -rotate-90' viewBox='0 0 36 36'>
+          <svg className="absolute h-full w-full -rotate-90" viewBox="0 0 36 36">
             <path
-              stroke='#e5e7eb'
-              strokeWidth='3'
-              fill='none'
-              d='M18 2.0845
+              stroke="#e5e7eb"
+              strokeWidth="3"
+              fill="none"
+              d="M18 2.0845
         a 15.9155 15.9155 0 0 1 0 31.831
-        a 15.9155 15.9155 0 0 1 0 -31.831'
+        a 15.9155 15.9155 0 0 1 0 -31.831"
             />
             <motion.path
               stroke={getColor()}
-              strokeWidth='3'
-              fill='none'
-              strokeLinecap='round'
-              strokeDasharray='100, 100'
+              strokeWidth="3"
+              fill="none"
+              strokeLinecap="round"
+              strokeDasharray="100, 100"
               strokeDashoffset={100 - scroll}
-              d='M18 2.0845
+              d="M18 2.0845
         a 15.9155 15.9155 0 0 1 0 31.831
-        a 15.9155 15.9155 0 0 1 0 -31.831'
+        a 15.9155 15.9155 0 0 1 0 -31.831"
               animate={{ strokeDashoffset: 100 - scroll }}
               transition={{ duration: 0.2 }}
             />
           </svg>
 
-          <ArrowUp className='text-primary relative z-10 h-4 w-4 sm:h-5 sm:w-5 dark:text-white' />
+          <ArrowUp className="text-primary relative z-10 h-4 w-4 sm:h-5 sm:w-5 dark:text-white" />
         </motion.button>
       )}
     </AnimatePresence>

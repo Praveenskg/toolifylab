@@ -1,28 +1,34 @@
-import { Copy, Image as ImageIcon, Loader2, Palette } from 'lucide-react';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { Button } from '../ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Copy, Image as ImageIcon, Loader2, Palette } from "lucide-react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 
 export default function ColorPicker({ selectedImage }: { selectedImage: File | null }) {
   const [colors, setColors] = useState<string[]>([]);
-  const [selectedColor, setSelectedColor] = useState<string>('');
-  const [imageUrl, setImageUrl] = useState<string>('');
+  const [selectedColor, setSelectedColor] = useState<string>("");
+  const [imageUrl, setImageUrl] = useState<string>("");
   const [isExtracting, setIsExtracting] = useState<boolean>(false);
   const [isExtracted, setIsExtracted] = useState<boolean>(false);
 
   useEffect(() => {
     if (!selectedImage) {
-      setImageUrl('');
-      setColors([]);
-      setSelectedColor('');
-      return;
+      // Use setTimeout to avoid synchronous setState in effect
+      const timeoutId = setTimeout(() => {
+        setImageUrl("");
+        setColors([]);
+        setSelectedColor("");
+      }, 0);
+      return () => clearTimeout(timeoutId);
     }
 
     const url = URL.createObjectURL(selectedImage);
-    setImageUrl(url);
-    setColors([]);
-    setSelectedColor('');
+    // Use setTimeout to avoid synchronous setState in effect
+    setTimeout(() => {
+      setImageUrl(url);
+      setColors([]);
+      setSelectedColor("");
+    }, 0);
 
     return () => {
       URL.revokeObjectURL(url);
@@ -31,8 +37,8 @@ export default function ColorPicker({ selectedImage }: { selectedImage: File | n
 
   const extractColors = () => {
     setIsExtracting(true);
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
     const img = new window.Image();
 
     img.onload = () => {
@@ -88,71 +94,71 @@ export default function ColorPicker({ selectedImage }: { selectedImage: File | n
       const r = parseInt(match[1]);
       const g = parseInt(match[2]);
       const b = parseInt(match[3]);
-      return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+      return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
     }
     return rgbColor;
   };
 
   return (
-    <div className='space-y-6 rounded-2xl border p-4 shadow-sm'>
+    <div className="space-y-6 rounded-2xl border p-4 shadow-sm">
       {!selectedImage ? (
         <>
-          <Card className='border-none shadow-none'>
+          <Card className="border-none shadow-none">
             <CardHeader>
-              <CardTitle className='flex items-center gap-2'>
-                <Palette className='h-5 w-5' />
+              <CardTitle className="flex items-center gap-2">
+                <Palette className="h-5 w-5" />
                 Color Picker
               </CardTitle>
               <CardDescription>Extract colors from your image</CardDescription>
             </CardHeader>
           </Card>
-          <div className='text-destructive flex items-center justify-center py-8 text-center'>
+          <div className="text-destructive flex items-center justify-center py-8 text-center">
             Upload an image to extract colors
           </div>
         </>
       ) : (
-        <div className='grid grid-cols-1 items-stretch gap-4 md:grid-cols-2'>
-          <Card className='flex flex-col border-none shadow-none'>
+        <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2">
+          <Card className="flex flex-col border-none shadow-none">
             <CardHeader>
-              <CardTitle className='flex items-center gap-2'>
-                <Palette className='h-5 w-5' />
+              <CardTitle className="flex items-center gap-2">
+                <Palette className="h-5 w-5" />
                 Color Picker
               </CardTitle>
               <CardDescription>Extract colors from your image</CardDescription>
             </CardHeader>
-            <CardContent className='space-y-4'>
-              <Button onClick={extractColors} disabled={isExtracting} className='w-full'>
+            <CardContent className="space-y-4">
+              <Button onClick={extractColors} disabled={isExtracting} className="w-full">
                 {isExtracting ? (
                   <>
-                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Extracting Colors...
                   </>
                 ) : (
                   <>
-                    <Palette className='mr-2 h-4 w-4' />
+                    <Palette className="mr-2 h-4 w-4" />
                     Extract Colors
                   </>
                 )}
               </Button>
               {colors.length > 0 && (
-                <div className='space-y-3'>
-                  <h4 className='font-medium'>Color Palette</h4>
-                  <div className='grid grid-cols-3 gap-2'>
+                <div className="space-y-3">
+                  <h4 className="font-medium">Color Palette</h4>
+                  <div className="grid grid-cols-3 gap-2">
                     {colors.map((color, index) => (
                       <div
                         key={index}
-                        className='group relative cursor-pointer'
+                        className="group relative cursor-pointer"
                         onClick={() => setSelectedColor(color)}
                       >
                         <div
-                          className='border-muted-foreground/20 hover:border-muted-foreground/50 h-16 w-full rounded-lg border-2 transition-colors'
+                          className="border-muted-foreground/20 hover:border-muted-foreground/50 h-16 w-full rounded-lg border-2 transition-colors"
                           style={{ backgroundColor: color }}
                         />
-                        <div className='absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100'>
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
                           <Button
-                            size='sm'
-                            variant='secondary'
-                            onClick={(e) => {
+                            size="sm"
+                            variant="secondary"
+                            onClick={e => {
                               e.stopPropagation();
                               copyToClipboard(getHexColor(color));
                             }}
@@ -166,35 +172,35 @@ export default function ColorPicker({ selectedImage }: { selectedImage: File | n
                 </div>
               )}
               {isExtracted && (
-                <div className='space-y-2'>
-                  <label className='text-sm font-medium'>Selected Color</label>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Selected Color</label>
                   {selectedColor ? (
-                    <div className='space-y-2'>
+                    <div className="space-y-2">
                       <div
-                        className='h-20 w-full rounded-lg border'
+                        className="h-20 w-full rounded-lg border"
                         style={{ backgroundColor: selectedColor }}
                       />
-                      <div className='space-y-1 text-sm'>
-                        <div className='flex justify-between'>
+                      <div className="space-y-1 text-sm">
+                        <div className="flex justify-between">
                           <span>RGB:</span>
                           <span>{selectedColor}</span>
                         </div>
-                        <div className='flex justify-between'>
+                        <div className="flex justify-between">
                           <span>HEX:</span>
                           <span>{getHexColor(selectedColor)}</span>
                         </div>
                       </div>
                       <Button
-                        variant='outline'
-                        size='sm'
+                        variant="outline"
+                        size="sm"
                         onClick={() => copyToClipboard(getHexColor(selectedColor))}
-                        className='w-full'
+                        className="w-full"
                       >
                         <Copy /> Copy HEX
                       </Button>
                     </div>
                   ) : (
-                    <div className='bg-muted/20 text-muted-foreground flex h-20 w-full items-center justify-center rounded-lg border'>
+                    <div className="bg-muted/20 text-muted-foreground flex h-20 w-full items-center justify-center rounded-lg border">
                       No color selected
                     </div>
                   )}
@@ -202,27 +208,27 @@ export default function ColorPicker({ selectedImage }: { selectedImage: File | n
               )}
             </CardContent>
           </Card>
-          <Card className='flex h-full flex-col border-none shadow-none'>
+          <Card className="flex h-full flex-col border-none shadow-none">
             <CardHeader>
-              <CardTitle className='flex items-center gap-2'>
-                <ImageIcon className='h-5 w-5' />
+              <CardTitle className="flex items-center gap-2">
+                <ImageIcon className="h-5 w-5" />
                 Image Preview
               </CardTitle>
               <CardDescription>Preview image used for color extraction</CardDescription>
             </CardHeader>
-            <CardContent className='flex flex-1 items-center justify-center'>
+            <CardContent className="flex flex-1 items-center justify-center">
               {imageUrl ? (
-                <div className='relative max-h-[400px] max-w-full overflow-hidden rounded border'>
+                <div className="relative max-h-[400px] max-w-full overflow-hidden rounded border">
                   <Image
                     src={imageUrl}
                     height={400}
                     width={400}
-                    alt='Preview'
-                    className='h-auto max-h-[400px] w-auto object-contain'
+                    alt="Preview"
+                    className="h-auto max-h-[400px] w-auto object-contain"
                   />
                 </div>
               ) : (
-                <Loader2 className='h-6 w-6 animate-spin' />
+                <Loader2 className="h-6 w-6 animate-spin" />
               )}
             </CardContent>
           </Card>

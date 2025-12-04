@@ -1,6 +1,11 @@
 # 🔬 ToolifyLab - Your Professional Tool Laboratory
 
-A modern, responsive web application built with Next.js 15 and TypeScript, featuring a comprehensive collection of 19 professional tools and calculators designed for professionals, students, and everyday use. From finance to health, productivity to planning—ToolifyLab gives you everything you need in one fast, privacy-first laboratory. Includes a professional invoice generator with multi-currency support, template management, and PDF export capabilities.
+A modern, responsive web application built with Next.js 15 and TypeScript,
+featuring a comprehensive collection of 19 professional tools and calculators
+designed for professionals, students, and everyday use. From finance to health,
+productivity to planning—ToolifyLab gives you everything you need in one fast,
+privacy-first laboratory. Includes a professional invoice generator with
+multi-currency support, template management, and PDF export capabilities.
 
 ![ToolifyLab](https://img.shields.io/badge/Next.js-15.5.5-black?style=for-the-badge&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue?style=for-the-badge&logo=typescript)
@@ -36,7 +41,9 @@ A modern, responsive web application built with Next.js 15 and TypeScript, featu
 
 ## 📜 Code of Conduct
 
-This project adheres to a [Code of Conduct](CODE_OF_CONDUCT.md) to ensure a welcoming environment for all contributors and users. By participating, you agree to:
+This project adheres to a [Code of Conduct](CODE_OF_CONDUCT.md) to ensure a
+welcoming environment for all contributors and users. By participating, you
+agree to:
 
 ### 🤝 Our Standards
 
@@ -57,11 +64,14 @@ This project adheres to a [Code of Conduct](CODE_OF_CONDUCT.md) to ensure a welc
 
 ### 🚨 Reporting Issues
 
-If you experience or witness unacceptable behavior, or have any other concerns, please email the project maintainers or create a private issue report.
+If you experience or witness unacceptable behavior, or have any other concerns,
+please email the project maintainers or create a private issue report.
 
 ### 📋 Enforcement
 
-Project maintainers have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned with this Code of Conduct.
+Project maintainers have the right and responsibility to remove, edit, or reject
+comments, commits, code, wiki edits, issues, and other contributions that are
+not aligned with this Code of Conduct.
 
 ## ✨ Features
 
@@ -141,19 +151,26 @@ Project maintainers have the right and responsibility to remove, edit, or reject
 #### **Invoice Generator** ⭐ Popular
 
 - **Professional Invoice Creation** - Complete business invoicing solution
-- **Multi-Currency Support** - 8 major currencies (USD, EUR, GBP, INR, CAD, AUD, JPY, CNY)
-- **Advanced Tax & Discount System** - Flexible tax rates (0%-25%) and percentage discounts
-- **Template Management** - Save, load, and manage invoice templates with localStorage
+- **Multi-Currency Support** - 8 major currencies (USD, EUR, GBP, INR, CAD, AUD,
+  JPY, CNY)
+- **Advanced Tax & Discount System** - Flexible tax rates (0%-25%) and
+  percentage discounts
+- **Template Management** - Save, load, and manage invoice templates with
+  localStorage
 - **Company & Client Management** - Complete contact and address information
-- **Itemized Billing** - Add multiple products/services with individual tax rates
-- **Real-time Calculations** - Automatic subtotal, discount, tax, and total calculations
+- **Itemized Billing** - Add multiple products/services with individual tax
+  rates
+- **Real-time Calculations** - Automatic subtotal, discount, tax, and total
+  calculations
 - **Professional PDF Export** - Business-ready PDF invoices with jsPDF
 - **React Hook Form Integration** - Advanced form validation with Zod schema
 - **Shadcn Day Picker** - Beautiful date selection for invoice and due dates
 - **Live Preview** - Real-time invoice preview before PDF generation
 - **Responsive Design** - Works perfectly on all devices
-- **Tabbed Interface** - Organized workflow with Create, Templates, and Preview tabs
-- **Perfect for Freelancers & Small Businesses** - Professional invoicing solution without external dependencies
+- **Tabbed Interface** - Organized workflow with Create, Templates, and Preview
+  tabs
+- **Perfect for Freelancers & Small Businesses** - Professional invoicing
+  solution without external dependencies
 
 ### 📊 Planning & Tracking (2 Tools)
 
@@ -365,7 +382,8 @@ Project maintainers have the right and responsibility to remove, edit, or reject
 
 ### Current Testing Setup
 
-ToolifyLab currently uses manual testing and linting for code quality. We are working on implementing a comprehensive testing strategy.
+ToolifyLab currently uses manual testing and linting for code quality. We are
+working on implementing a comprehensive testing strategy.
 
 ### 🛠️ Code Quality Tools
 
@@ -438,7 +456,8 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 ### PWA Deployment
 
-ToolifyLab includes PWA features that work automatically when deployed to HTTPS domains.
+ToolifyLab includes PWA features that work automatically when deployed to HTTPS
+domains.
 
 ## 🎨 Design Features
 
@@ -505,8 +524,8 @@ The application is fully responsive and optimized for:
    pnpm dev
    ```
 
-4. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+4. **Open your browser** Navigate to
+   [http://localhost:3000](http://localhost:3000)
 
 ### Available Scripts
 
@@ -590,7 +609,8 @@ toolifylab/
 ### Export Functionality
 
 - **PDF Export** - Download detailed reports and professional invoices
-- **Professional Formatting** - Clean, printable documents with business branding
+- **Professional Formatting** - Clean, printable documents with business
+  branding
 - **Complete Data** - All calculations and schedules included
 - **Multi-Currency Support** - Export invoices in 8 major currencies
 - **Template Management** - Save and reuse invoice templates
@@ -620,7 +640,8 @@ toolifylab/
 
 ### Business & Professional Tools
 
-- **Professional Invoicing** - Complete business invoicing solution with multi-currency support
+- **Professional Invoicing** - Complete business invoicing solution with
+  multi-currency support
 - **Template Management** - Save and reuse invoice templates for efficiency
 - **Advanced Calculations** - Automatic tax, discount, and total calculations
 - **Form Validation** - Comprehensive validation with react-hook-form and Zod
@@ -656,7 +677,8 @@ toolifylab/
 
 ## 🔒 Security
 
-We take security seriously. If you discover a security vulnerability, please follow these steps:
+We take security seriously. If you discover a security vulnerability, please
+follow these steps:
 
 ### 🚨 Reporting Security Vulnerabilities
 
@@ -693,7 +715,8 @@ We will:
 
 ## 🤝 Contributing
 
-We welcome contributions from the community! Please read our [Contributing Guide](CONTRIBUTING.md) for detailed information on:
+We welcome contributions from the community! Please read our
+[Contributing Guide](CONTRIBUTING.md) for detailed information on:
 
 - Development setup and workflow
 - Code style and standards
@@ -705,7 +728,8 @@ Here's a quick overview of how you can help:
 ### 🚀 Quick Start
 
 1. **Fork** the repository
-2. **Clone** your fork: `git clone https://github.com/your-username/toolifylab.git`
+2. **Clone** your fork:
+   `git clone https://github.com/your-username/toolifylab.git`
 3. **Create** a feature branch: `git checkout -b feature/amazing-feature`
 4. **Install** dependencies: `npm install`
 5. **Start** development: `npm run dev`
@@ -720,8 +744,10 @@ Here's a quick overview of how you can help:
 
 ### 🐛 Bug Reports & Feature Requests
 
-- **Bug Reports**: Use the [Bug Report template](.github/ISSUE_TEMPLATE/bug_report.md)
-- **Feature Requests**: Use the [Feature Request template](.github/ISSUE_TEMPLATE/feature_request.md)
+- **Bug Reports**: Use the
+  [Bug Report template](.github/ISSUE_TEMPLATE/bug_report.md)
+- **Feature Requests**: Use the
+  [Feature Request template](.github/ISSUE_TEMPLATE/feature_request.md)
 - **Questions**: Check the [FAQ](#-faq) first, then create a discussion
 
 ### 💻 Pull Request Process
@@ -743,7 +769,8 @@ Here's a quick overview of how you can help:
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
+for details.
 
 ## 📈 Roadmap
 
@@ -753,7 +780,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [ ] **Performance Optimization**: Code splitting and lazy loading improvements
 - [ ] **Offline Support**: Enhanced PWA features with better caching
 - [ ] **Accessibility**: WCAG 2.1 AA compliance improvements
-- [ ] **Internationalization**: Multi-language support (starting with Hindi, Spanish, French)
+- [ ] **Internationalization**: Multi-language support (starting with Hindi,
+      Spanish, French)
 
 ### 🎯 Medium-term Goals (6-12 months)
 
@@ -773,59 +801,65 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### 📊 Feature Requests & Voting
 
-Have an idea for ToolifyLab? Check out our [feature request board](https://github.com/praveenskg/toolifylab/discussions/categories/feature-requests) and vote on existing suggestions!
+Have an idea for ToolifyLab? Check out our
+[feature request board](https://github.com/praveenskg/toolifylab/discussions/categories/feature-requests)
+and vote on existing suggestions!
 
 ## ❓ FAQ
 
 ### General Questions
 
-**Q: Is ToolifyLab free to use?**
-A: Yes! ToolifyLab is completely free and open source. All tools work offline and don't require any registration.
+**Q: Is ToolifyLab free to use?** A: Yes! ToolifyLab is completely free and open
+source. All tools work offline and don't require any registration.
 
-**Q: Do I need to create an account?**
-A: No accounts required! All your data stays on your device using local storage.
+**Q: Do I need to create an account?** A: No accounts required! All your data
+stays on your device using local storage.
 
-**Q: Is my data secure?**
-A: Absolutely. ToolifyLab processes everything client-side and never sends data to external servers.
+**Q: Is my data secure?** A: Absolutely. ToolifyLab processes everything
+client-side and never sends data to external servers.
 
-**Q: Can I use ToolifyLab offline?**
-A: Yes! Install it as a PWA and use all tools without internet connection.
+**Q: Can I use ToolifyLab offline?** A: Yes! Install it as a PWA and use all
+tools without internet connection.
 
 ### Technical Questions
 
-**Q: Which browsers are supported?**
-A: Modern browsers including Chrome, Firefox, Safari, and Edge (last 2 versions).
+**Q: Which browsers are supported?** A: Modern browsers including Chrome,
+Firefox, Safari, and Edge (last 2 versions).
 
-**Q: How do I report a bug?**
-A: Create an issue on GitHub using the [Bug Report template](.github/ISSUE_TEMPLATE/bug_report.md).
+**Q: How do I report a bug?** A: Create an issue on GitHub using the
+[Bug Report template](.github/ISSUE_TEMPLATE/bug_report.md).
 
-**Q: Can I contribute code?**
-A: Definitely! See our [Contributing Guide](#-contributing) for details.
+**Q: Can I contribute code?** A: Definitely! See our
+[Contributing Guide](#-contributing) for details.
 
-**Q: How do I suggest a new tool?**
-A: Open a [Feature Request discussion](https://github.com/praveenskg/toolifylab/discussions/new?category=feature-requests).
+**Q: How do I suggest a new tool?** A: Open a
+[Feature Request discussion](https://github.com/praveenskg/toolifylab/discussions/new?category=feature-requests).
 
 ### Development Questions
 
-**Q: What technologies does ToolifyLab use?**
-A: Built with Next.js 15, React 19, TypeScript, and Tailwind CSS. See [Technology Stack](#️-technology-stack) for details.
+**Q: What technologies does ToolifyLab use?** A: Built with Next.js 15, React
+19, TypeScript, and Tailwind CSS. See [Technology Stack](#️-technology-stack) for
+details.
 
-**Q: How do I run ToolifyLab locally?**
-A: Clone the repo, run `npm install`, then `npm run dev`. See [Getting Started](#-getting-started).
+**Q: How do I run ToolifyLab locally?** A: Clone the repo, run `npm install`,
+then `npm run dev`. See [Getting Started](#-getting-started).
 
-**Q: Can I deploy ToolifyLab to my own server?**
-A: Yes! It's a standard Next.js app that can be deployed to Vercel, Netlify, or any hosting platform.
+**Q: Can I deploy ToolifyLab to my own server?** A: Yes! It's a standard Next.js
+app that can be deployed to Vercel, Netlify, or any hosting platform.
 
 ### Tool-specific Questions
 
-**Q: Why do some calculations seem different from other apps?**
-A: Each tool follows industry-standard formulas. If you notice discrepancies, please report them with specific examples.
+**Q: Why do some calculations seem different from other apps?** A: Each tool
+follows industry-standard formulas. If you notice discrepancies, please report
+them with specific examples.
 
-**Q: Can I export my data from ToolifyLab?**
-A: Yes! Tools like Invoice Generator and Goal Tracker support PDF exports. Data is also stored locally in your browser.
+**Q: Can I export my data from ToolifyLab?** A: Yes! Tools like Invoice
+Generator and Goal Tracker support PDF exports. Data is also stored locally in
+your browser.
 
-**Q: How accurate are the currency conversions?**
-A: We use reliable exchange rate APIs, but rates fluctuate. For financial decisions, always verify with official sources.
+**Q: How accurate are the currency conversions?** A: We use reliable exchange
+rate APIs, but rates fluctuate. For financial decisions, always verify with
+official sources.
 
 ## 🙏 Acknowledgments
 
@@ -854,11 +888,16 @@ A: We use reliable exchange rate APIs, but rates fluctuate. For financial decisi
 
 If you have questions or need help:
 
-- 📖 **Documentation**: Check this README and our [Wiki](https://github.com/praveenskg/toolifylab/wiki)
-- 🐛 **Bug Reports**: [Create an issue](https://github.com/praveenskg/toolifylab/issues/new?template=bug_report.md)
-- 💡 **Feature Requests**: [Start a discussion](https://github.com/praveenskg/toolifylab/discussions/new?category=feature-requests)
-- 💬 **General Questions**: [Q&A Discussions](https://github.com/praveenskg/toolifylab/discussions/categories/q-a)
-- 📧 **Security Issues**: [security@toolifylab.com](mailto:security@toolifylab.com)
+- 📖 **Documentation**: Check this README and our
+  [Wiki](https://github.com/praveenskg/toolifylab/wiki)
+- 🐛 **Bug Reports**:
+  [Create an issue](https://github.com/praveenskg/toolifylab/issues/new?template=bug_report.md)
+- 💡 **Feature Requests**:
+  [Start a discussion](https://github.com/praveenskg/toolifylab/discussions/new?category=feature-requests)
+- 💬 **General Questions**:
+  [Q&A Discussions](https://github.com/praveenskg/toolifylab/discussions/categories/q-a)
+- 📧 **Security Issues**:
+  [security@toolifylab.com](mailto:security@toolifylab.com)
 
 ### 🌐 Community Resources
 
@@ -948,7 +987,8 @@ Help make ToolifyLab better for everyone:
 
 ---
 
-_For older versions, see [CHANGELOG.md](CHANGELOG.md) or [Releases](https://github.com/praveenskg/toolifylab/releases)_
+_For older versions, see [CHANGELOG.md](CHANGELOG.md) or
+[Releases](https://github.com/praveenskg/toolifylab/releases)_
 
 ## 🌟 Live Demo
 

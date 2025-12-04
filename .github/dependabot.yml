@@ -7,23 +7,23 @@ updates:
     groups:
       actions-all:
         patterns:
-          - '*'
+          - "*"
     labels:
-      - 'dependencies'
-      - 'automerge'
+      - "dependencies"
+      - "automerge"
 
   - package-ecosystem: npm
     directory: /
     schedule:
       interval: weekly
     ignore:
-      - dependency-name: '@types/node'
+      - dependency-name: "@types/node"
         update-types:
-          - 'version-update:semver-major'
+          - "version-update:semver-major"
     groups:
       npm-all:
         patterns:
-          - '*'
+          - "*"
     labels:
-      - 'dependencies'
-      - 'automerge'
+      - "dependencies"
+      - "automerge"

@@ -1,7 +1,7 @@
 name: Feature Request
 description: Suggest a new feature or enhancement
-title: '[FEATURE] Brief description of the requested feature'
-labels: ['enhancement', 'triage']
+title: "[FEATURE] Brief description of the requested feature"
+labels: ["enhancement", "triage"]
 body:
   - type: markdown
     attributes:
@@ -30,7 +30,7 @@ body:
     attributes:
       label: Problem Statement
       description: What problem would this feature solve? What's currently missing or difficult?
-      placeholder: 'Describe the problem this feature would address...'
+      placeholder: "Describe the problem this feature would address..."
     validations:
       required: true
 

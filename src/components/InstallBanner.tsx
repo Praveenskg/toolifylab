@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { usePWA } from '@/hooks/use-pwa';
-import { useState } from 'react';
-import { StickyBanner } from './ui/sticky-banner';
+import { Button } from "@/components/ui/button";
+import { usePWA } from "@/hooks/use-pwa";
+import { useState } from "react";
+import { StickyBanner } from "./ui/sticky-banner";
 
 export function InstallBanner() {
   const { showBanner, isInstalled, installApp } = usePWA();
@@ -24,15 +24,15 @@ export function InstallBanner() {
     <StickyBanner
       hideOnScroll={true}
       onDismiss={handleDismiss}
-      className='relative bg-linear-to-r from-indigo-600 to-purple-600 text-white'
+      className="relative bg-linear-to-r from-indigo-600 to-purple-600 text-white"
     >
-      <div className='container flex w-full flex-row flex-wrap items-center justify-between gap-3 pr-8'>
-        <div className='flex flex-col'>
-          <p className='text-md font-medium'>Install ToolifyLab?</p>
-          <p className='text-sm opacity-80'>Use it like a native app!</p>
+      <div className="container flex w-full flex-row flex-wrap items-center justify-between gap-3 pr-8">
+        <div className="flex flex-col">
+          <p className="text-md font-medium">Install ToolifyLab?</p>
+          <p className="text-sm opacity-80">Use it like a native app!</p>
         </div>
-        <div className='flex items-center gap-2'>
-          <Button size='sm' onClick={handleInstall}>
+        <div className="flex items-center gap-2">
+          <Button size="sm" onClick={handleInstall}>
             Install App
           </Button>
         </div>

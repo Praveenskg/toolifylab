@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
 export function usePWA() {
@@ -15,10 +15,10 @@ export function usePWA() {
   const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     const checkIfInstalled = () => {
-      if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
+      if (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) {
         setIsInstalled(true);
       }
     };
@@ -40,18 +40,21 @@ export function usePWA() {
       setIsInstallable(true);
       setShowBanner(true);
     };
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    window.addEventListener('appinstalled', handleAppInstalled);
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    window.addEventListener("appinstalled", handleAppInstalled);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
-    setIsOnline(navigator.onLine);
+    // Use setTimeout to avoid synchronous setState in effect
+    setTimeout(() => {
+      setIsOnline(navigator.onLine);
+    }, 0);
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-      window.removeEventListener('appinstalled', handleAppInstalled);
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+      window.removeEventListener("appinstalled", handleAppInstalled);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
@@ -62,7 +65,7 @@ export function usePWA() {
       await deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
 
-      if (outcome === 'accepted') {
+      if (outcome === "accepted") {
         setIsInstalled(true);
         setIsInstallable(false);
         setDeferredPrompt(null);
@@ -70,24 +73,24 @@ export function usePWA() {
         return true;
       }
     } catch (error) {
-      console.error('Error installing app:', error);
+      console.error("Error installing app:", error);
     }
 
     return false;
   };
 
   const requestNotificationPermission = async () => {
-    if (typeof window === 'undefined' || !('Notification' in window)) return false;
+    if (typeof window === "undefined" || !("Notification" in window)) return false;
 
-    if (Notification.permission === 'granted') return true;
-    if (Notification.permission === 'denied') return false;
+    if (Notification.permission === "granted") return true;
+    if (Notification.permission === "denied") return false;
 
     const permission = await Notification.requestPermission();
-    return permission === 'granted';
+    return permission === "granted";
   };
 
   const showNotification = (title: string, options?: NotificationOptions) => {
-    if (typeof window !== 'undefined' && Notification.permission === 'granted') {
+    if (typeof window !== "undefined" && Notification.permission === "granted") {
       new Notification(title, options);
     }
   };

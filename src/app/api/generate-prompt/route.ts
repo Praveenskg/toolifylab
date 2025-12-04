@@ -1,5 +1,5 @@
-import { GoogleGenAI } from '@google/genai';
-import { NextResponse } from 'next/server';
+import { GoogleGenAI } from "@google/genai";
+import { NextResponse } from "next/server";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
@@ -7,8 +7,8 @@ export async function POST(req: Request) {
   try {
     const { prompt, style } = await req.json();
 
-    if (!prompt || typeof prompt !== 'string') {
-      return NextResponse.json({ error: 'Invalid prompt' }, { status: 400 });
+    if (!prompt || typeof prompt !== "string") {
+      return NextResponse.json({ error: "Invalid prompt" }, { status: 400 });
     }
 
     const instruction = `
@@ -39,7 +39,7 @@ Always operate as a top-tier professional in prompt engineering.
 `.trim();
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: "gemini-2.5-flash",
       contents: prompt,
       config: {
         systemInstruction: instruction,
@@ -51,7 +51,7 @@ Always operate as a top-tier professional in prompt engineering.
       responses: response.text,
     });
   } catch (error) {
-    console.error('Gemini Error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    console.error("Gemini Error:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

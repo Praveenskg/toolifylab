@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 interface Tool {
   id: string;
@@ -16,14 +16,14 @@ interface UseDynamicTitleProps {
 export function useDynamicTitle({
   currentTool,
   selectedCategory,
-  baseTitle = 'ToolifyLab',
+  baseTitle = "ToolifyLab",
 }: UseDynamicTitleProps) {
   useEffect(() => {
     let title: string;
 
     if (currentTool) {
       title = `${currentTool.name} - ${currentTool.category} | ${baseTitle}`;
-    } else if (selectedCategory !== 'All Tools') {
+    } else if (selectedCategory !== "All Tools") {
       title = `${selectedCategory} Tools - ${baseTitle}`;
     } else {
       title = `${baseTitle} - All-in-One Utility Collection`;
@@ -34,11 +34,11 @@ export function useDynamicTitle({
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       if (currentTool) {
-        metaDescription.setAttribute('content', currentTool.description);
+        metaDescription.setAttribute("content", currentTool.description);
       } else {
         metaDescription.setAttribute(
-          'content',
-          'Professional Calculator Suite with financial, health, math, and conversion tools. Free online calculators for everyday use.',
+          "content",
+          "Professional Calculator Suite with financial, health, math, and conversion tools. Free online calculators for everyday use."
         );
       }
     }

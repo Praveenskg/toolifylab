@@ -1,7 +1,7 @@
-'use client';
-import { cn } from '@/lib/utils';
-import { motion, useMotionValueEvent, useScroll } from 'motion/react';
-import React, { SVGProps, useState } from 'react';
+"use client";
+import { cn } from "@/lib/utils";
+import { motion, useMotionValueEvent, useScroll } from "motion/react";
+import React, { SVGProps, useState } from "react";
 
 export const StickyBanner = ({
   className,
@@ -17,7 +17,7 @@ export const StickyBanner = ({
   const [open, setOpen] = useState(true);
   const { scrollY } = useScroll();
 
-  useMotionValueEvent(scrollY, 'change', (latest) => {
+  useMotionValueEvent(scrollY, "change", latest => {
     console.log(latest);
     if (hideOnScroll && latest > 40) {
       setOpen(false);
@@ -32,8 +32,8 @@ export const StickyBanner = ({
   return (
     <motion.div
       className={cn(
-        'sticky inset-x-0 top-0 z-40 flex min-h-14 w-full items-center justify-center bg-transparent px-4 py-1',
-        className,
+        "sticky inset-x-0 top-0 z-40 flex min-h-14 w-full items-center justify-center bg-transparent px-4 py-1",
+        className
       )}
       initial={{
         y: -100,
@@ -45,7 +45,7 @@ export const StickyBanner = ({
       }}
       transition={{
         duration: 0.3,
-        ease: 'easeInOut',
+        ease: "easeInOut",
       }}
     >
       {children}
@@ -57,10 +57,10 @@ export const StickyBanner = ({
         animate={{
           scale: 1,
         }}
-        className='absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer'
+        className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer"
         onClick={handleClose}
       >
-        <CloseIcon className='h-5 w-5 text-white' />
+        <CloseIcon className="h-5 w-5 text-white" />
       </motion.button>
     </motion.div>
   );
@@ -69,20 +69,20 @@ export const StickyBanner = ({
 const CloseIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
-      xmlns='http://www.w3.org/2000/svg'
-      width='24'
-      height='24'
-      viewBox='0 0 24 24'
-      fill='none'
-      stroke='currentColor'
-      strokeWidth='2'
-      strokeLinecap='round'
-      strokeLinejoin='round'
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       {...props}
     >
-      <path stroke='none' d='M0 0h24v24H0z' fill='none' />
-      <path d='M18 6l-12 12' />
-      <path d='M6 6l12 12' />
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M18 6l-12 12" />
+      <path d="M6 6l12 12" />
     </svg>
   );
 };

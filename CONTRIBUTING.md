@@ -2,7 +2,9 @@
 
 Thank you for your interest in contributing to ToolifyLab! 🎉
 
-We welcome contributions from developers of all skill levels. Whether you're fixing bugs, adding features, improving documentation, or helping with testing, your contributions are valuable to us and the community.
+We welcome contributions from developers of all skill levels. Whether you're
+fixing bugs, adding features, improving documentation, or helping with testing,
+your contributions are valuable to us and the community.
 
 ## Table of Contents
 
@@ -19,15 +21,20 @@ We welcome contributions from developers of all skill levels. Whether you're fix
 
 ## Code of Conduct
 
-This project follows a [Code of Conduct](CODE_OF_CONDUCT.md) to ensure a welcoming environment for all contributors. By participating, you agree to uphold this code.
+This project follows a [Code of Conduct](CODE_OF_CONDUCT.md) to ensure a
+welcoming environment for all contributors. By participating, you agree to
+uphold this code.
 
 ## Reporting Issues
 
-We use GitHub Issues to track bugs, feature requests, and general questions. To help us respond efficiently, please use the appropriate issue template:
+We use GitHub Issues to track bugs, feature requests, and general questions. To
+help us respond efficiently, please use the appropriate issue template:
 
 ### 🐛 Bug Reports
 
-Found a bug? Use the [Bug Report template](https://github.com/praveenskg/toolifylab/issues/new?template=bug-report.yml) and provide:
+Found a bug? Use the
+[Bug Report template](https://github.com/praveenskg/toolifylab/issues/new?template=bug-report.yml)
+and provide:
 
 - Tool name and version information
 - Steps to reproduce the issue
@@ -37,7 +44,9 @@ Found a bug? Use the [Bug Report template](https://github.com/praveenskg/toolify
 
 ### ✨ Feature Requests
 
-Have an idea for a new tool or feature? Use the [Feature Request template](https://github.com/praveenskg/toolifylab/issues/new?template=feature-request.yml) and include:
+Have an idea for a new tool or feature? Use the
+[Feature Request template](https://github.com/praveenskg/toolifylab/issues/new?template=feature-request.yml)
+and include:
 
 - Clear problem statement
 - Proposed solution with details
@@ -46,7 +55,9 @@ Have an idea for a new tool or feature? Use the [Feature Request template](https
 
 ### 📚 Documentation Issues
 
-Issues with documentation? Use the [Documentation template](https://github.com/praveenskg/toolifylab/issues/new?template=documentation.yml) for:
+Issues with documentation? Use the
+[Documentation template](https://github.com/praveenskg/toolifylab/issues/new?template=documentation.yml)
+for:
 
 - Outdated information
 - Missing instructions
@@ -55,7 +66,9 @@ Issues with documentation? Use the [Documentation template](https://github.com/p
 
 ### ❓ Questions & Support
 
-Need help or have a question? Use the [Question template](https://github.com/praveenskg/toolifylab/issues/new?template=question.yml) for:
+Need help or have a question? Use the
+[Question template](https://github.com/praveenskg/toolifylab/issues/new?template=question.yml)
+for:
 
 - How-to questions
 - Technical inquiries
@@ -64,14 +77,17 @@ Need help or have a question? Use the [Question template](https://github.com/pra
 
 ### 🔒 Security Issues
 
-**Never report security vulnerabilities through public GitHub issues.** Email [security@toolifylab.com](mailto:security@toolifylab.com) directly instead.
+**Never report security vulnerabilities through public GitHub issues.** Email
+[security@toolifylab.com](mailto:security@toolifylab.com) directly instead.
 
 ### Issue Guidelines
 
 - **Search First**: Check if the issue already exists before creating a new one
-- **Be Specific**: Provide detailed information to help us understand and reproduce issues
+- **Be Specific**: Provide detailed information to help us understand and
+  reproduce issues
 - **One Issue Per Report**: Create separate issues for different problems
-- **Stay Updated**: Follow your issue for updates and provide additional information if requested
+- **Stay Updated**: Follow your issue for updates and provide additional
+  information if requested
 
 ## Getting Started
 
@@ -100,7 +116,8 @@ npm install
 npm run dev
 ```
 
-Visit [http://localhost:3000](http://localhost:3000) to see ToolifyLab running locally!
+Visit [http://localhost:3000](http://localhost:3000) to see ToolifyLab running
+locally!
 
 ## Development Setup
 
@@ -337,7 +354,8 @@ Contributors are recognized in several ways:
 
 ### Hall of Fame
 
-We maintain a special recognition for contributors who have made outstanding contributions:
+We maintain a special recognition for contributors who have made outstanding
+contributions:
 
 - **🏆 Tool Creator**: Created a major tool or feature
 - **🎯 Bug Hunter**: Fixed critical bugs or security issues
@@ -349,15 +367,20 @@ We maintain a special recognition for contributors who have made outstanding con
 
 Need help with contributing?
 
-- **📖 Documentation**: Check the [README](README.md) and [Wiki](https://github.com/praveenskg/toolifylab/wiki)
-- **💬 Discussions**: Ask questions in [GitHub Discussions](https://github.com/praveenskg/toolifylab/discussions)
+- **📖 Documentation**: Check the [README](README.md) and
+  [Wiki](https://github.com/praveenskg/toolifylab/wiki)
+- **💬 Discussions**: Ask questions in
+  [GitHub Discussions](https://github.com/praveenskg/toolifylab/discussions)
 - **🐛 Issues**: Create issues for bugs or feature requests
-- **📧 Email**: Contact maintainers at [contribute@toolifylab.com](mailto:contribute@toolifylab.com)
+- **📧 Email**: Contact maintainers at
+  [contribute@toolifylab.com](mailto:contribute@toolifylab.com)
 
 ## License
 
-By contributing to ToolifyLab, you agree that your contributions will be licensed under the same [MIT License](LICENSE) that covers the project.
+By contributing to ToolifyLab, you agree that your contributions will be
+licensed under the same [MIT License](LICENSE) that covers the project.
 
 ---
 
-Thank you for contributing to ToolifyLab! Your efforts help make powerful tools accessible to everyone. 🚀
+Thank you for contributing to ToolifyLab! Your efforts help make powerful tools
+accessible to everyone. 🚀
