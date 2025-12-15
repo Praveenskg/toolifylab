@@ -192,7 +192,7 @@ jobs:
           echo "Dependencies installed successfully"
 
       - name: Cache Next.js Build
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             .next/cache
@@ -215,7 +215,7 @@ jobs:
 
       - name: Upload Build Artifacts
         if: success()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: build-artifacts
           path: |
