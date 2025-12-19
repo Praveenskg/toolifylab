@@ -410,7 +410,11 @@ export default function EMICalculator() {
                           />
                         ))}
                       </Pie>
-                      <Tooltip formatter={(value: number) => `₹${value.toFixed(2)}`} />
+                      <Tooltip
+                        formatter={(value: number | undefined) =>
+                          value !== undefined ? `₹${value.toFixed(2)}` : ""
+                        }
+                      />
                       <Legend
                         content={({ payload }) => (
                           <ul className="mt-4 flex flex-wrap justify-center gap-4 text-sm">
