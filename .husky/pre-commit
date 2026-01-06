@@ -11,24 +11,12 @@ echo "Running pre-commit checks..."
 
 # Step 0: Check for secrets and sensitive files
 echo "Checking for secrets and sensitive files..."
-# Match actual sensitive file patterns, but exclude legitimate component files
-# Patterns to match: .env, .pem, .key, .secret, password.txt, api_key, secret_key, etc.
-# Exclude: password-generator component files (legitimate code files)
-SENSITIVE_PATTERNS="\.env|\.pem|\.key$|\.secret$"
-# Check for sensitive file extensions
-MATCHING_FILES=$(echo "$STAGED_FILES" | grep -qiE "$SENSITIVE_PATTERNS" || true)
-# Check for suspicious file names (password.txt, api_key.json, etc.) but exclude component files
-SUSPICIOUS_NAMES=$(echo "$STAGED_FILES" | grep -qiE "(password|api[_-]?key|secret[_-]?key|private[_-]?key)(\.(txt|json|yml|yaml|config|conf)|$)" || true)
-# Filter out legitimate component files
-if [ -n "$SUSPICIOUS_NAMES" ]; then
-  SUSPICIOUS_NAMES=$(echo "$SUSPICIOUS_NAMES" | grep -vE "(password-generator|password-generator\.(tsx|ts|jsx|js))" || true)
-fi
-if [ -n "$MATCHING_FILES" ] || [ -n "$SUSPICIOUS_NAMES" ]; then
+SENSITIVE_PATTERNS="\.env|\.pem|\.key|\.secret|api[_-]?key|secret[_-]?key|private[_-]?key"
+if echo "$STAGED_FILES" | grep -qiE "$SENSITIVE_PATTERNS"; then
   echo "❌ ERROR: Potential secrets or sensitive files detected in staged files!"
   echo "Please remove sensitive files before committing."
   echo "Staged files matching patterns:"
-  [ -n "$MATCHING_FILES" ] && echo "$MATCHING_FILES"
-  [ -n "$SUSPICIOUS_NAMES" ] && echo "$SUSPICIOUS_NAMES"
+  echo "$STAGED_FILES" | grep -iE "$SENSITIVE_PATTERNS"
   exit 1
 fi
 
@@ -63,12 +51,12 @@ if [ -n "$LARGE_FILES" ]; then
   exit 1
 fi
 
-# Step 0.6: Check package-lock.json sync
-echo "Checking package-lock.json sync..."
+# Step 0.6: Check pnpm-lock.yaml sync
+echo "Checking pnpm-lock.yaml sync..."
 if echo "$STAGED_FILES" | grep -q "package.json"; then
-  if ! echo "$STAGED_FILES" | grep -q "package-lock.json"; then
-    echo "⚠️  WARNING: package.json changed but package-lock.json not staged."
-    echo "Run 'npm install' to update package-lock.json"
+  if ! echo "$STAGED_FILES" | grep -q "pnpm-lock.yaml"; then
+    echo "⚠️  WARNING: package.json changed but pnpm-lock.yaml not staged."
+    echo "Run 'pnpm install' to update pnpm-lock.yaml"
     read -p "Continue anyway? (y/N) " -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -83,10 +71,10 @@ FORMATTABLE_FILES=$(echo "$STAGED_FILES" | grep -E '\.(js|jsx|ts|tsx|json|md|css
 
 if [ -n "$FORMATTABLE_FILES" ]; then
   # Check formatting first
-  if echo "$FORMATTABLE_FILES" | xargs --no-run-if-empty npx prettier --check --ignore-unknown >/dev/null 2>&1; then
+  if echo "$FORMATTABLE_FILES" | xargs --no-run-if-empty pnpm exec prettier --check --ignore-unknown >/dev/null 2>&1; then
     echo "Code already properly formatted"
   else
-    echo "$FORMATTABLE_FILES" | xargs --no-run-if-empty npx prettier --write --ignore-unknown
+    echo "$FORMATTABLE_FILES" | xargs --no-run-if-empty pnpm exec prettier --write --ignore-unknown
 
     # Check if prettier made any changes and add them
     if ! git diff --quiet -- "$FORMATTABLE_FILES" 2>/dev/null; then
@@ -103,7 +91,7 @@ echo "Running ESLint auto-fix..."
 LINTABLE_FILES=$(echo "$STAGED_FILES" | grep -E '\.(js|jsx|ts|tsx)$' || true)
 
 if [ -n "$LINTABLE_FILES" ]; then
-  echo "$LINTABLE_FILES" | xargs --no-run-if-empty npx eslint --fix --quiet
+  echo "$LINTABLE_FILES" | xargs --no-run-if-empty pnpm exec eslint --fix --quiet
 
   # Check if eslint made any changes and add them
   if ! git diff --quiet -- "$LINTABLE_FILES" 2>/dev/null; then
@@ -117,9 +105,9 @@ fi
 # Step 3: Final ESLint check
 echo "Final lint check..."
 if [ -n "$LINTABLE_FILES" ]; then
-  echo "$LINTABLE_FILES" | xargs --no-run-if-empty npx eslint --max-warnings=50 || {
+  echo "$LINTABLE_FILES" | xargs --no-run-if-empty pnpm exec eslint --max-warnings=50 || {
     echo "❌ ESLint errors found. Please fix them before committing."
-    echo "Run 'npm run lint' to see errors or 'npm run lint:fix' to auto-fix"
+    echo "Run 'pnpm run lint' to see errors or 'pnpm run lint:fix' to auto-fix"
     exit 1
   }
 else
@@ -132,9 +120,9 @@ TS_FILES=$(echo "$STAGED_FILES" | grep -E '\.(ts|tsx)$' || true)
 
 if [ -n "$TS_FILES" ]; then
   # Use incremental build for faster checks
-  npx tsc --noEmit --incremental || {
+  pnpm exec tsc --noEmit --incremental || {
     echo "❌ TypeScript errors found. Please fix them before committing."
-    echo "Run 'npm run type-check' to see detailed errors"
+    echo "Run 'pnpm run type-check' to see detailed errors"
     exit 1
   }
 else
@@ -148,9 +136,9 @@ SOURCE_FILES=$(echo "$STAGED_FILES" | grep -E '\.(js|jsx|ts|tsx|json)$' | grep -
 if [ -n "$SOURCE_FILES" ]; then
   echo "Source files changed, running build check..."
   # Quick build check - only verify it compiles, don't output
-  npm run build >/dev/null 2>&1 || {
+  pnpm run build >/dev/null 2>&1 || {
     echo "❌ Build failed! Please fix build errors before committing."
-    echo "Run 'npm run build' to see detailed errors"
+    echo "Run 'pnpm run build' to see detailed errors"
     exit 1
   }
   echo "Build check passed"
@@ -160,10 +148,10 @@ fi
 
 # Step 6: Security audit (only on package.json changes)
 echo "Security audit..."
-if echo "$STAGED_FILES" | grep -q "package.json\|package-lock.json"; then
-  npm audit --audit-level=moderate || {
+if echo "$STAGED_FILES" | grep -q "package.json\|pnpm-lock.yaml"; then
+  pnpm audit --audit-level=moderate || {
     echo "❌ Security vulnerabilities found. Please fix them before committing."
-    echo "Run 'npm audit fix' to auto-fix issues (or 'npm audit' to see details)"
+    echo "Run 'pnpm audit --fix' to auto-fix issues (or 'pnpm audit' to see details)"
     exit 1
   }
 else
