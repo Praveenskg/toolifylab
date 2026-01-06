@@ -26,14 +26,13 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Install Dependencies
         env:
@@ -57,14 +56,13 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Install Dependencies
         env:
@@ -88,14 +86,13 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Install Dependencies
         env:
@@ -119,14 +116,13 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Install Dependencies
         env:
