@@ -11,8 +11,10 @@ updates:
     labels:
       - "dependencies"
       - "automerge"
+    reviewers:
+      - "praveenskg"
 
-  - package-ecosystem: npm
+  - package-ecosystem: pnpm
     directory: /
     schedule:
       interval: weekly
@@ -21,9 +23,11 @@ updates:
         update-types:
           - "version-update:semver-major"
     groups:
-      npm-all:
+      pnpm-all:
         patterns:
           - "*"
     labels:
       - "dependencies"
       - "automerge"
+    reviewers:
+      - "praveenskg"

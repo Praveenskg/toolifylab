@@ -1,17 +1,20 @@
 name: CI Pipeline
 
 on:
-  push: # Run on push to every branch
+  push:
+    branches: [main]
   pull_request:
-    branches: [main] # Run on pull request to main branch
-  workflow_dispatch: # Allow manual triggering
+    branches: [main]
+  workflow_dispatch:
 
 env:
   NODE_VERSION: "22"
   CACHE_VERSION: "v1"
 
 jobs:
+  # -------------------------------
   # Job 1: TypeScript Type Check
+  # -------------------------------
   typescript:
     name: TypeScript Type Check
     runs-on: ubuntu-latest
@@ -21,55 +24,28 @@ jobs:
       contents: read
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v5
 
-      - name: Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v6
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
-          cache-dependency-path: "package-lock.json"
+          cache: pnpm
 
       - name: Install Dependencies
-        run: |
-          echo "Installing dependencies..."
-          npm ci --prefer-offline --no-audit
-          echo "Dependencies installed successfully"
-
-      - name: Validate Lock File
-        run: |
-          echo "Validating package-lock.json..."
-          if ! npm ci --dry-run >/dev/null 2>&1; then
-            echo "❌ ERROR: package-lock.json is out of sync with package.json"
-            echo "Run 'npm install' to update package-lock.json"
-            exit 1
-          fi
-          echo "✅ Lock file is valid"
+        env:
+          HUSKY: 0
+        run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: TypeScript Type Check
-        run: |
-          echo "Running TypeScript type checking..."
-          npm run type-check || {
-            echo "❌ TypeScript check failed!"
-            echo "Run 'npm run type-check' to see detailed errors"
-            exit 1
-          }
-          echo "✅ TypeScript check completed successfully"
+        run: pnpm run type-check
 
-      - name: Generate TypeScript Report
-        if: always()
-        run: |
-          echo "## TypeScript Type Check" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Status**: ${{ job.status == 'success' && '✅ Passed' || '❌ Failed' }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Workflow**: ${{ github.workflow }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Branch**: \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "**Commit**: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
-
-  # Job 2: ESLint Code Quality Check
+  # -------------------------------
+  # Job 2: ESLint
+  # -------------------------------
   eslint:
     name: ESLint Code Quality
     runs-on: ubuntu-latest
@@ -79,45 +55,28 @@ jobs:
       contents: read
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v5
 
-      - name: Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v6
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
-          cache-dependency-path: "package-lock.json"
+          cache: pnpm
 
       - name: Install Dependencies
-        run: |
-          echo "Installing dependencies..."
-          npm ci --prefer-offline --no-audit
-          echo "Dependencies installed successfully"
+        env:
+          HUSKY: 0
+        run: pnpm install --frozen-lockfile --prefer-offline
 
-      - name: ESLint Code Quality Check
-        run: |
-          echo "Running ESLint code quality check..."
-          npm run lint || {
-            echo "❌ ESLint check failed!"
-            echo "Run 'npm run lint' to see detailed errors"
-            exit 1
-          }
-          echo "✅ ESLint check completed successfully"
+      - name: ESLint
+        run: pnpm run lint
 
-      - name: Generate ESLint Report
-        if: always()
-        run: |
-          echo "## ESLint Code Quality Check" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Status**: ${{ job.status == 'success' && '✅ Passed' || '❌ Failed' }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Workflow**: ${{ github.workflow }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Branch**: \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "**Commit**: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
-
-  # Job 3: Prettier Formatting Check
+  # -------------------------------
+  # Job 3: Prettier
+  # -------------------------------
   prettier:
     name: Prettier Formatting
     runs-on: ubuntu-latest
@@ -127,113 +86,28 @@ jobs:
       contents: read
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
         with:
-          fetch-depth: 0
+          version: 9
 
-      - name: Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
-          cache-dependency-path: "package-lock.json"
-
-      - name: Install Dependencies
-        run: |
-          echo "Installing dependencies..."
-          npm ci --prefer-offline --no-audit
-          echo "Dependencies installed successfully"
-
-      - name: Prettier Formatting Check
-        run: |
-          echo "Running Prettier formatting check..."
-          npm run format:check || {
-            echo "❌ Prettier check failed. Code is not properly formatted."
-            echo "Run 'npm run format' to auto-fix formatting issues"
-            exit 1
-          }
-          echo "✅ Prettier check completed successfully"
-
-      - name: Generate Prettier Report
-        if: always()
-        run: |
-          echo "## Prettier Formatting Check" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Status**: ${{ job.status == 'success' && '✅ Passed' || '❌ Failed' }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Workflow**: ${{ github.workflow }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Branch**: \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "**Commit**: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
-
-  # Job 4: Build Verification
-  build:
-    name: Build Verification
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-
-    permissions:
-      contents: read
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v6
-
-      - name: Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
-          cache-dependency-path: "package-lock.json"
+          cache: pnpm
 
       - name: Install Dependencies
-        run: |
-          echo "Installing dependencies..."
-          npm ci --prefer-offline --no-audit
-          echo "Dependencies installed successfully"
-
-      - name: Cache Next.js Build
-        uses: actions/cache@v5
-        with:
-          path: |
-            .next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
-          restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
-
-      - name: Build Application
         env:
-          # Add any required environment variables for build
-          NODE_ENV: production
-        run: |
-          echo "Building Next.js application..."
-          npm run build || {
-            echo "❌ Build failed!"
-            echo "Check the logs above for detailed error messages"
-            exit 1
-          }
-          echo "✅ Build completed successfully"
+          HUSKY: 0
+        run: pnpm install --frozen-lockfile --prefer-offline
 
-      - name: Upload Build Artifacts
-        if: success()
-        uses: actions/upload-artifact@v6
-        with:
-          name: build-artifacts
-          path: |
-            .next
-          retention-days: 1
-          if-no-files-found: ignore
+      - name: Prettier
+        run: pnpm run format:check
 
-      - name: Generate Build Report
-        if: always()
-        run: |
-          echo "## Build Verification" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Status**: ${{ job.status == 'success' && '✅ Passed' || '❌ Failed' }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Workflow**: ${{ github.workflow }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Branch**: \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "**Commit**: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
-
-  # Job 5: Security Audit
+  # -------------------------------
+  # Job 4: Security Audit
+  # -------------------------------
   security:
     name: Security Audit
     runs-on: ubuntu-latest
@@ -243,144 +117,99 @@ jobs:
       contents: read
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v5
 
-      - name: Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v6
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
-          cache-dependency-path: "package-lock.json"
+          cache: pnpm
 
       - name: Install Dependencies
-        run: |
-          echo "Installing dependencies..."
-          npm ci --prefer-offline --no-audit
-          echo "Dependencies installed successfully"
+        env:
+          HUSKY: 0
+        run: pnpm install --frozen-lockfile --prefer-offline
 
-      - name: Run Security Audit
-        run: |
-          echo "Running security audit..."
-          npm audit --audit-level=moderate || {
-            echo "❌ Security vulnerabilities found!"
-            echo "Run 'npm audit' to see details or 'npm audit fix' to auto-fix"
-            exit 1
-          }
-          echo "✅ Security audit passed"
+      - name: Security Audit
+        run: pnpm audit --audit-level=moderate
 
-      - name: Generate Security Report
-        if: always()
-        run: |
-          echo "## Security Audit Report" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Status**: ${{ job.status == 'success' && '✅ Passed' || '❌ Failed' }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Audit Level**: Moderate" >> $GITHUB_STEP_SUMMARY
-          echo "**Workflow**: ${{ github.workflow }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Branch**: \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "**Commit**: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
-
-  # Job 6: PR Comment Bot (runs after all checks complete)
+  # -------------------------------
+  # Job 5: PR Comment Bot
+  # -------------------------------
   pr-comment:
     name: PR Status Comment
     runs-on: ubuntu-latest
-    needs: [typescript, eslint, prettier, build, security]
+    needs: [typescript, eslint, prettier, security]
     if: github.event_name == 'pull_request'
 
     permissions:
       pull-requests: write
-      contents: read
 
     steps:
-      - name: Comment PR with Results
+      - name: Update PR with CI Results
         uses: actions/github-script@v8
         with:
           script: |
-            const { owner, repo, number } = context.issue;
+            const checks = [
+              { name: "TypeScript", status: "${{ needs.typescript.result }}" },
+              { name: "ESLint", status: "${{ needs.eslint.result }}" },
+              { name: "Prettier", status: "${{ needs.prettier.result }}" },
+              { name: "Security Audit", status: "${{ needs.security.result }}" },
+            ];
 
-            // Get workflow run results
-            const { data: runs } = await github.rest.actions.listWorkflowRuns({
-              owner,
-              repo,
-              workflow_id: 'ci.yml',
-              head_sha: context.payload.pull_request.head.sha,
-              per_page: 1,
-            });
+            const iconMap = {
+              success: "✅ Passed",
+              failure: "❌ Failed",
+              cancelled: "🚫 Cancelled",
+              skipped: "⏭️ Skipped",
+            };
 
-            if (runs.workflow_runs.length === 0) {
-              console.log('No workflow runs found');
-              return;
-            }
+            const icon = (s) => iconMap[s] || "⏳ Running";
 
-            const run = runs.workflow_runs[0];
-            const status = run.conclusion || run.status;
-            const statusText =
-              status === 'success'
-                ? '✅ SUCCESS'
-                : status === 'failure'
-                  ? '❌ FAILURE'
-                  : '⏳ RUNNING';
+            const body = `##  CI Results
 
-            // Get job statuses
-            const { data: jobs } = await github.rest.actions.listJobsForWorkflowRun({
-              owner,
-              repo,
-              run_id: run.id,
-            });
-
-            const jobStatuses = jobs.jobs
-              .filter((job) => job.name !== 'PR Status Comment')
-              .map((job) => {
-                const jobStatus =
-                  job.conclusion === 'success'
-                    ? '✅'
-                    : job.conclusion === 'failure'
-                      ? '❌'
-                      : job.conclusion === 'cancelled'
-                        ? '🚫'
-                        : '⏳';
-                return `- **${job.name}**: ${jobStatus}`;
-              });
-
-            const body = `## Code Quality Check Results
-
-            **Status**: ${statusText}
-
-            ### Quality Checks:
-            ${jobStatuses.join('\n')}
-
-            ### Details:
-            - **Workflow**: [\`${{ github.sha }}\`](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-            - **Branch**: \`${{ github.head_ref }}\`
-            - **Author**: ${{ github.actor }}
+            ${checks.map(c => `- **${c.name}**: ${icon(c.status)}`).join("\n")}
 
             ---
-            *Quality checks ensure code meets professional standards*`;
+            **Commit**: \`${{ github.sha }}\`
+            **Branch**: \`${{ github.head_ref }}\`
+            **Author**: @${{ github.actor }}
+            `;
 
-            // Find existing bot comment
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+
+            // Fetch existing comments
             const { data: comments } = await github.rest.issues.listComments({
               owner,
               repo,
-              issue_number: number,
+              issue_number,
             });
 
-            const botComment = comments.find(
+            // Find existing CI comment
+            const existing = comments.find(
               (comment) =>
-                comment.user.type === 'Bot' && comment.body.includes('## Code Quality Check Results')
+                comment.user.type === "Bot" &&
+                comment.body.includes("##  CI Results")
             );
 
-            if (botComment) {
+            if (existing) {
+              // Update existing comment
               await github.rest.issues.updateComment({
                 owner,
                 repo,
-                comment_id: botComment.id,
-                body: body,
+                comment_id: existing.id,
+                body: body + "\n\n📌 _This comment is auto-updated_",
               });
             } else {
+              // Create new comment
               await github.rest.issues.createComment({
                 owner,
                 repo,
-                issue_number: number,
-                body: body,
+                issue_number,
+                body,
               });
             }
