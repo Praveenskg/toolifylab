@@ -2,8 +2,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
-import { motion, useInView } from "framer-motion";
 import { Search, X } from "lucide-react";
+import { motion, useInView } from "motion/react";
 import { useMemo, useRef, useState } from "react";
 
 interface ToolSearchProps {
@@ -207,13 +207,13 @@ export function ToolSearch({
                   onClick={() => setSelectedCategory(category.name)}
                   className={`group relative overflow-hidden transition-all duration-300 ${
                     selectedCategory === category.name
-                      ? "from-primary to-primary/80 shadow-primary/25 bg-gradient-to-r shadow-lg"
+                      ? "from-primary to-primary/80 shadow-primary/25 bg-linear-to-r shadow-lg"
                       : "hover:bg-primary/10 hover:border-primary/50"
                   }`}
                 >
                   {selectedCategory === category.name && (
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0"
+                      className="absolute inset-0 bg-linear-to-r from-white/0 via-white/20 to-white/0"
                       animate={{ x: ["-100%", "100%"] }}
                       transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                     />

@@ -188,7 +188,7 @@ export default function GeneratePrompt() {
 
             {!loading && response && (
               <div className="w-full p-4">
-                <div className="prose dark:prose-invert max-w-none break-words whitespace-pre-wrap">
+                <div className="prose dark:prose-invert max-w-none wrap-break-word whitespace-pre-wrap">
                   <TypewriterMarkdown text={response} />
                 </div>
               </div>
