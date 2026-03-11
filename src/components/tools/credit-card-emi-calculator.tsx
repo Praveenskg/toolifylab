@@ -502,8 +502,8 @@ export default function CreditCardEMICalculator() {
                         ))}
                       </Pie>
                       <Tooltip
-                        formatter={(value: number | undefined) =>
-                          value !== undefined ? `₹${value.toFixed(2)}` : ""
+                        formatter={value =>
+                          typeof value === "number" ? `₹${value.toFixed(2)}` : ""
                         }
                       />
                       <Legend

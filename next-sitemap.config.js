@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.SITE_URL || "https://tools.praveensingh.online",
+  siteUrl: process.env.SITE_URL || "https://tools.praveenskg.in",
   generateRobotsTxt: true,
   // Exclude API routes and other non-public paths
   exclude: ["/api/*", "/sw.js", "/manifest.json", "/not-found"],
