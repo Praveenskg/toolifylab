@@ -3,7 +3,10 @@ import { Card, CardContent } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+const SITE_URL = process.env.SITE_URL || "https://tools.praveensingh.online";
 
 export default function UnitConverterPage() {
   return (
@@ -39,7 +42,7 @@ export default function UnitConverterPage() {
   );
 }
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Unit Converter - Convert Units Instantly | Tools by Praveen Singh",
   description:
     "Free online unit converter for length, weight, volume, temperature, speed, and more. Accurate and fast conversions with a user-friendly interface.",
@@ -55,17 +58,25 @@ export const metadata = {
     "unit conversion tool",
     "metric to imperial",
   ],
+  alternates: {
+    canonical: `${SITE_URL}/unit-converter`,
+  },
+  metadataBase: new URL(SITE_URL),
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
     title: "Unit Converter - Convert Units Instantly | Tools by Praveen Singh",
     description:
       "Convert between units of measurement with this easy-to-use online unit converter. Supports length, weight, volume, and more.",
-    url: "https://tools.praveensingh.online/tools/unit-converter",
-    siteName: "Tools by Praveen Singh",
-    locale: "en_IN",
+    url: `${SITE_URL}/unit-converter`,
+    siteName: "ToolifyLab",
+    locale: "en_US",
     type: "website",
     images: [
       {
-        url: "https://tools.praveensingh.online/og/unit-converter.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Unit Converter OpenGraph Banner",
@@ -77,6 +88,7 @@ export const metadata = {
     title: "Unit Converter - Convert Units Instantly | Tools by Praveen Singh",
     description:
       "Free and fast online unit converter for all types of measurements. Convert length, temperature, weight, and more.",
-    images: ["https://tools.praveensingh.online/og/unit-converter.png"],
+    creator: "@its_praveen_s",
+    images: ["/og-image.png"],
   },
 };

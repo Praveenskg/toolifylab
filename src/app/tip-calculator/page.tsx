@@ -2,7 +2,10 @@ import TipCalculator from "@/components/tools/tip-calculator";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+const SITE_URL = process.env.SITE_URL || "https://tools.praveensingh.online";
 
 export default function TipCalculatorPage() {
   return (
@@ -38,7 +41,7 @@ export default function TipCalculatorPage() {
   );
 }
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Tip Calculator - Calculate Tips Instantly",
   description:
     "Quickly calculate tip amounts and split bills with ease using our free Tip Calculator on tools.praveensingh.online. Perfect for restaurants, cafes, and group outings.",
@@ -54,17 +57,25 @@ export const metadata = {
     "tip amount calculator",
     "tools.praveensingh.online",
   ],
+  alternates: {
+    canonical: `${SITE_URL}/tip-calculator`,
+  },
+  metadataBase: new URL(SITE_URL),
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
     title: "Tip Calculator - Calculate Tips Instantly",
     description:
       "Use our easy Tip Calculator to quickly calculate the tip amount and split the bill among friends or group members.",
-    url: "https://tools.praveensingh.online/tip-calculator",
-    siteName: "Tools by Praveen Singh",
+    url: `${SITE_URL}/tip-calculator`,
+    siteName: "ToolifyLab",
     type: "website",
-    locale: "en_IN",
+    locale: "en_US",
     images: [
       {
-        url: "https://tools.praveensingh.online/og-tip-calculator.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Tip Calculator - tools.praveensingh.online",
@@ -76,6 +87,7 @@ export const metadata = {
     title: "Tip Calculator - Calculate Tips Instantly",
     description:
       "Easily calculate restaurant tips and split bills using the free Tip Calculator at tools.praveensingh.online.",
-    images: ["https://tools.praveensingh.online/og-tip-calculator.png"],
+    creator: "@its_praveen_s",
+    images: ["/og-image.png"],
   },
 };

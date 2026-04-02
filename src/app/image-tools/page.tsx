@@ -2,7 +2,10 @@ import ImageTools from "@/components/tools/image-tools";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+const SITE_URL = process.env.SITE_URL || "https://tools.praveensingh.online";
 
 export default function ImageToolsPage() {
   return (
@@ -38,7 +41,7 @@ export default function ImageToolsPage() {
   );
 }
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Image Tools - Convert, Resize, Compress, and More",
   description:
     "Explore a range of free online image tools to convert, resize, compress, crop, and optimize images easily on tools.praveensingh.online.",
@@ -54,17 +57,25 @@ export const metadata = {
     "image editing online",
     "image format converter",
   ],
+  alternates: {
+    canonical: `${SITE_URL}/image-tools`,
+  },
+  metadataBase: new URL(SITE_URL),
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
     title: "Image Tools - Convert, Resize, Compress, and More",
     description:
       "A suite of powerful and free image tools to help you convert, resize, compress, crop, and optimize images quickly and efficiently.",
-    url: "https://tools.praveensingh.online/image-tools",
-    siteName: "Tools by Praveen Singh",
+    url: `${SITE_URL}/image-tools`,
+    siteName: "ToolifyLab",
     type: "website",
-    locale: "en_IN",
+    locale: "en_US",
     images: [
       {
-        url: "https://tools.praveensingh.online/og-image-tools.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Image Tools - tools.praveensingh.online",
@@ -76,6 +87,7 @@ export const metadata = {
     title: "Image Tools - Convert, Resize, Compress, and More",
     description:
       "Convert, resize, compress, crop, and optimize your images easily using the free Image Tools at tools.praveensingh.online.",
-    images: ["https://tools.praveensingh.online/og-image-tools.png"],
+    creator: "@its_praveen_s",
+    images: ["/og-image.png"],
   },
 };

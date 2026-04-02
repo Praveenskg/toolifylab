@@ -1,70 +1,93 @@
-"use client";
-
-import { FeaturedTools } from "@/components/homepage/FeaturedTools";
-import { HeroSection } from "@/components/homepage/HeroSection";
-import { NewsletterSignup } from "@/components/homepage/NewsletterSignup";
-import { ToolGrid } from "@/components/homepage/ToolGrid";
-import { ToolSearch } from "@/components/homepage/ToolSearch";
+import HomePageClient from "@/components/homepage/HomePageClient";
 import { tools } from "@/lib/tools";
-import { useState } from "react";
+import type { Metadata } from "next";
 
-const categories = [
-  { name: "All Tools", count: tools.length },
-  {
-    name: "Financial",
-    count: tools.filter(t => t.category === "Financial").length,
+const SITE_URL = process.env.SITE_URL || "https://tools.praveensingh.online";
+
+export const metadata: Metadata = {
+  title: "Online Calculators and Utilities",
+  description:
+    "Use 19+ free online calculators and utility tools including EMI, GST, BMI, currency converter, invoice generator, and more.",
+  keywords: [
+    "online tools",
+    "free calculators",
+    "emi calculator",
+    "gst calculator",
+    "bmi calculator",
+    "currency converter",
+    "invoice generator",
+    "productivity tools",
+  ],
+  alternates: {
+    canonical: SITE_URL,
   },
-  { name: "Health", count: tools.filter(t => t.category === "Health").length },
-  {
-    name: "Date & Time",
-    count: tools.filter(t => t.category === "Date & Time").length,
+  metadataBase: new URL(SITE_URL),
+  openGraph: {
+    title: "ToolifyLab - Online Calculators and Utilities",
+    description:
+      "A fast and free collection of online calculators and utility tools for finance, health, productivity, and daily use.",
+    url: SITE_URL,
+    type: "website",
+    siteName: "ToolifyLab",
+    locale: "en_US",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "ToolifyLab - Online Calculators and Utilities",
+      },
+    ],
   },
-  { name: "Math", count: tools.filter(t => t.category === "Math").length },
-  {
-    name: "Conversion",
-    count: tools.filter(t => t.category === "Conversion").length,
+  twitter: {
+    card: "summary_large_image",
+    title: "ToolifyLab - Online Calculators and Utilities",
+    description:
+      "A free collection of online calculators and utility tools for finance, health, and productivity.",
+    creator: "@its_praveen_s",
+    images: ["/og-image.png"],
   },
-  {
-    name: "Planning",
-    count: tools.filter(t => t.category === "Planning").length,
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "ToolifyLab",
+  url: SITE_URL,
+  description:
+    "A professional collection of calculators and utility tools for finance, health, productivity, and daily use.",
+  inLanguage: "en-US",
+  publisher: {
+    "@type": "Organization",
+    name: "ToolifyLab",
+    url: SITE_URL,
   },
-  {
-    name: "Utility",
-    count: tools.filter(t => t.category === "Utility").length,
-  },
-];
+};
+
+const toolsListSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "ToolifyLab Tools Directory",
+  itemListElement: tools.map((tool, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: tool.name,
+    url: `${SITE_URL}/${tool.id}`,
+  })),
+};
 
 export default function Dashboard() {
-  const [selectedCategory, setSelectedCategory] = useState("All Tools");
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const filteredTools = tools.filter(tool => {
-    const matchesCategory = selectedCategory === "All Tools" || tool.category === selectedCategory;
-    const matchesSearch =
-      tool.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      tool.description.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
-
-  const featuredTools = tools.filter(tool => tool.popular).slice(0, 4);
-
   return (
-    <div className="bg-background flex min-h-screen flex-col">
-      <HeroSection />
-      <FeaturedTools tools={featuredTools} />
-      <main className="flex-1">
-        <div className="container mx-auto px-3 py-6 sm:px-4 sm:py-8">
-          <ToolSearch
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-            categories={categories}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-          />
-          <ToolGrid tools={filteredTools} />
-        </div>
-      </main>
-      <NewsletterSignup />
-    </div>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(toolsListSchema) }}
+      />
+      <HomePageClient />
+    </>
   );
 }

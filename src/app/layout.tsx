@@ -25,6 +25,7 @@ const APP_DEFAULT_TITLE = "ToolifyLab - Professional Tool Laboratory";
 const APP_TITLE_TEMPLATE = "%s - ToolifyLab";
 const APP_DESCRIPTION =
   "Your professional tool laboratory - comprehensive collection of calculators and utilities designed for professionals, students, and everyday use.";
+const SITE_URL = process.env.SITE_URL || "https://tools.praveensingh.online";
 
 export const metadata: Metadata = {
   applicationName: APP_NAME,
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
     template: APP_TITLE_TEMPLATE,
   },
   description: APP_DESCRIPTION,
-  metadataBase: new URL("https://tools.praveensingh.online"),
+  metadataBase: new URL(SITE_URL),
   icons: {
     icon: [
       { url: "/favicon.png", type: "image/png" },
@@ -81,7 +82,7 @@ export const metadata: Metadata = {
       template: APP_TITLE_TEMPLATE,
     },
     description: APP_DESCRIPTION,
-    url: "https://tools.praveensingh.online",
+    url: SITE_URL,
     images: [
       {
         url: "/og-image.png",
@@ -116,7 +117,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://tools.praveensingh.online",
+    canonical: SITE_URL,
   },
 };
 

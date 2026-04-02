@@ -2,7 +2,10 @@ import GSTCalculator from "@/components/tools/gst-calculator";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+const SITE_URL = process.env.SITE_URL || "https://tools.praveensingh.online";
 
 export default function GSTCalculatorPage() {
   return (
@@ -38,7 +41,7 @@ export default function GSTCalculatorPage() {
   );
 }
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "GST Calculator - Compute GST Easily | Tools by Praveen Singh",
   description:
     "Use this free GST calculator to compute Goods and Services Tax, reverse GST, and inclusive or exclusive GST amounts accurately.",
@@ -53,17 +56,25 @@ export const metadata = {
     "gst calculator india",
     "gst tool",
   ],
+  alternates: {
+    canonical: `${SITE_URL}/gst-calculator`,
+  },
+  metadataBase: new URL(SITE_URL),
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
     title: "GST Calculator - Compute GST Easily | Tools by Praveen Singh",
     description:
       "Instantly calculate GST with inclusive and exclusive options. Perfect for businesses and individuals in India.",
-    url: "https://tools.praveensingh.online/tools/gst-calculator",
-    siteName: "Tools by Praveen Singh",
-    locale: "en_IN",
+    url: `${SITE_URL}/gst-calculator`,
+    siteName: "ToolifyLab",
+    locale: "en_US",
     type: "website",
     images: [
       {
-        url: "https://tools.praveensingh.online/og/gst-calculator.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "GST Calculator OpenGraph Banner",
@@ -75,6 +86,7 @@ export const metadata = {
     title: "GST Calculator - Compute GST Easily | Tools by Praveen Singh",
     description:
       "Instantly calculate GST with inclusive and exclusive options. Perfect for businesses and individuals in India.",
-    images: ["https://tools.praveensingh.online/og/gst-calculator.png"],
+    creator: "@its_praveen_s",
+    images: ["/og-image.png"],
   },
 };

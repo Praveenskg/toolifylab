@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.SITE_URL || "https://tools.praveenskg.in",
+  siteUrl: process.env.SITE_URL || "https://tools.praveensingh.online",
   generateRobotsTxt: true,
   // Exclude API routes and other non-public paths
   exclude: ["/api/*", "/sw.js", "/manifest.json", "/not-found"],
@@ -15,7 +15,9 @@ module.exports = {
         disallow: ["/api/"],
       },
     ],
-    additionalSitemaps: [],
+    additionalSitemaps: [
+      `${process.env.SITE_URL || "https://tools.praveensingh.online"}/sitemap.xml`,
+    ],
   },
   // Transform function to customize sitemap entries
   transform: async (config, path) => {

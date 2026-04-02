@@ -2,7 +2,10 @@ import TimeZoneConverter from "@/components/tools/timezone-converter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+const SITE_URL = process.env.SITE_URL || "https://tools.praveensingh.online";
 
 export default function TimeZoneConverterPage() {
   return (
@@ -38,7 +41,7 @@ export default function TimeZoneConverterPage() {
   );
 }
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Timezone Converter - Convert Time Across Zones | Tools by Praveen Singh",
   description:
     "Easily convert time between different timezones. Supports all major cities and countries. Great for scheduling global meetings.",
@@ -54,17 +57,25 @@ export const metadata = {
     "time zone tool",
     "timezone calculator",
   ],
+  alternates: {
+    canonical: `${SITE_URL}/timezone-converter`,
+  },
+  metadataBase: new URL(SITE_URL),
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
     title: "Timezone Converter - Convert Time Across Zones | Tools by Praveen Singh",
     description:
       "Convert time between multiple timezones easily. Supports real-time and future time comparison with location support.",
-    url: "https://tools.praveensingh.online/timezone-converter",
-    siteName: "Tools by Praveen Singh",
-    locale: "en_IN",
+    url: `${SITE_URL}/timezone-converter`,
+    siteName: "ToolifyLab",
+    locale: "en_US",
     type: "website",
     images: [
       {
-        url: "https://tools.praveensingh.online/og/timezone-converter.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Timezone Converter OpenGraph Banner",
@@ -76,6 +87,7 @@ export const metadata = {
     title: "Timezone Converter - Convert Time Across Zones | Tools by Praveen Singh",
     description:
       "Easily convert time between cities and countries. Perfect for remote teams, global meetings, and travelers.",
-    images: ["https://tools.praveensingh.online/og/timezone-converter.png"],
+    creator: "@its_praveen_s",
+    images: ["/og-image.png"],
   },
 };

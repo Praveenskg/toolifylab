@@ -1,10 +1,11 @@
-"use client";
-
 import AgeCalculator from "@/components/tools/age-calculator";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+const SITE_URL = process.env.SITE_URL || "https://tools.praveensingh.online";
 
 export default function AgeCalculatorPage() {
   return (
@@ -39,3 +40,48 @@ export default function AgeCalculatorPage() {
     </div>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Age Calculator",
+  description:
+    "Calculate your exact age in years, months, and days using the free online age calculator.",
+  keywords: [
+    "age calculator",
+    "calculate age",
+    "date of birth calculator",
+    "years months days calculator",
+    "online age tool",
+  ],
+  alternates: {
+    canonical: `${SITE_URL}/age-calculator`,
+  },
+  metadataBase: new URL(SITE_URL),
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    title: "Age Calculator | ToolifyLab",
+    description:
+      "Find your exact age instantly from your date of birth. Simple, fast, and free age calculator.",
+    url: `${SITE_URL}/age-calculator`,
+    type: "website",
+    siteName: "ToolifyLab",
+    locale: "en_US",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Age Calculator",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Age Calculator | ToolifyLab",
+    description: "Calculate exact age in years, months, and days in seconds.",
+    creator: "@its_praveen_s",
+    images: ["/og-image.png"],
+  },
+};

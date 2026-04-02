@@ -33,4 +33,8 @@ export default function NotFoundPage() {
 
 export const metadata = {
   title: "404 – Not Found",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };

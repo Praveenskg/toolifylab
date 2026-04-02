@@ -2,7 +2,10 @@ import TimerTools from "@/components/tools/countdown-stopwatch";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+const SITE_URL = process.env.SITE_URL || "https://tools.praveensingh.online";
 
 export default function TimersToolsPage() {
   return (
@@ -38,7 +41,7 @@ export default function TimersToolsPage() {
   );
 }
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Timers Tools - Countdown, Stopwatch & Pomodoro | tools.praveensingh.online",
   description:
     "Use free and reliable timer tools including countdown timer, stopwatch, and Pomodoro timer. Perfect for productivity, workouts, cooking, and time management.",
@@ -54,17 +57,25 @@ export const metadata = {
     "tools.praveensingh.online",
     "workout timer",
   ],
+  alternates: {
+    canonical: `${SITE_URL}/timers-tools`,
+  },
+  metadataBase: new URL(SITE_URL),
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
     title: "Timers Tools - Countdown, Stopwatch & Pomodoro",
     description:
       "Free online tools to measure and manage time effectively: countdown, stopwatch, Pomodoro timer, and more.",
-    url: "https://tools.praveensingh.online/timers",
-    siteName: "Tools by Praveen Singh",
+    url: `${SITE_URL}/timers-tools`,
+    siteName: "ToolifyLab",
     type: "website",
-    locale: "en_IN",
+    locale: "en_US",
     images: [
       {
-        url: "https://tools.praveensingh.online/og-timers.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Timers Tools - tools.praveensingh.online",
@@ -76,6 +87,7 @@ export const metadata = {
     title: "Timers Tools - Countdown, Stopwatch & Pomodoro",
     description:
       "Track time easily with our timer tools including countdowns, stopwatch, and Pomodoro focus sessions. Free and user-friendly.",
-    images: ["https://tools.praveensingh.online/og-timers.png"],
+    creator: "@its_praveen_s",
+    images: ["/og-image.png"],
   },
 };

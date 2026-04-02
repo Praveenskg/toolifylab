@@ -3,7 +3,10 @@ import { Card, CardContent } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+const SITE_URL = process.env.SITE_URL || "https://tools.praveensingh.online";
 
 export default function GoalTrackerPage() {
   return (
@@ -39,8 +42,8 @@ export default function GoalTrackerPage() {
   );
 }
 
-export const metadata = {
-  metadataBase: new URL("https://tools.praveensingh.online"),
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Goal Tracker – Financial Savings Planner | Tools by Praveen Singh",
   description:
     "Track and plan your savings journey effectively with the Goal Tracker tool. Set targets, monitor progress, and achieve your financial goals with ease.",
@@ -64,21 +67,21 @@ export const metadata = {
     },
   ],
   creator: "Praveen Singh",
-  publisher: "Praveen Singh",
+  publisher: "ToolifyLab",
   category: "Finance",
   alternates: {
-    canonical: "https://tools.praveensingh.online/goal-tracker",
+    canonical: `${SITE_URL}/goal-tracker`,
   },
   openGraph: {
     title: "Goal Tracker – Financial Savings Planner",
     description:
       "Easily track your financial goals and monitor savings progress with this simple yet powerful Goal Tracker.",
-    url: "https://tools.praveensingh.online/goal-tracker",
-    siteName: "Tools by Praveen Singh",
+    url: `${SITE_URL}/goal-tracker`,
+    siteName: "ToolifyLab",
     type: "website",
     images: [
       {
-        url: "https://tools.praveensingh.online/og/goal-tracker.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Goal Tracker – Financial Savings Planner",
@@ -90,8 +93,8 @@ export const metadata = {
     title: "Goal Tracker – Financial Savings Planner",
     description:
       "Plan your financial goals and track your savings effectively using our Goal Tracker tool.",
-    creator: "@praveensinghdev",
-    images: ["https://tools.praveensingh.online/og/goal-tracker.png"],
+    creator: "@its_praveen_s",
+    images: ["/og-image.png"],
   },
   icons: {
     icon: "/favicon.ico",

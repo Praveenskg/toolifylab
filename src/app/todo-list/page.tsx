@@ -2,7 +2,10 @@ import TodoList from "@/components/tools/todo-list";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+const SITE_URL = process.env.SITE_URL || "https://tools.praveensingh.online";
 
 export default function TodoPage() {
   return (
@@ -38,7 +41,7 @@ export default function TodoPage() {
   );
 }
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "To-Do List - Simple Task Manager | Tools by Praveen Singh",
   description:
     "Stay organized with this minimal and effective online to-do list. Add, delete, and manage your daily tasks with ease.",
@@ -54,17 +57,25 @@ export const metadata = {
     "personal tasks",
     "notes and tasks",
   ],
+  alternates: {
+    canonical: `${SITE_URL}/todo-list`,
+  },
+  metadataBase: new URL(SITE_URL),
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
     title: "To-Do List - Simple Task Manager | Tools by Praveen Singh",
     description:
       "Manage your daily tasks with this free and simple to-do list. Designed for clarity and productivity.",
-    url: "https://tools.praveensingh.online/todo-list",
-    siteName: "Tools by Praveen Singh",
-    locale: "en_IN",
+    url: `${SITE_URL}/todo-list`,
+    siteName: "ToolifyLab",
+    locale: "en_US",
     type: "website",
     images: [
       {
-        url: "https://tools.praveensingh.online/og/todo-list.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "To-Do List OpenGraph Banner",
@@ -76,6 +87,7 @@ export const metadata = {
     title: "To-Do List - Simple Task Manager | Tools by Praveen Singh",
     description:
       "Free online to-do list to manage tasks, goals, and personal reminders. Clean interface for better focus.",
-    images: ["https://tools.praveensingh.online/og/todo-list.png"],
+    creator: "@its_praveen_s",
+    images: ["/og-image.png"],
   },
 };
