@@ -1,7 +1,7 @@
 import imageCompression from "browser-image-compression";
 import { Download, ImagePlay, Loader2, Zap } from "lucide-react";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Label } from "../ui/label";
@@ -9,46 +9,54 @@ import { Slider } from "../ui/slider";
 
 export default function ImageCompressor({ selectedImage }: { selectedImage: File | null }) {
   const [compressionLevel, setCompressionLevel] = useState<number>(60);
-  const [originalSize, setOriginalSize] = useState<number>(0);
   const [compressedSize, setCompressedSize] = useState<number>(0);
   const [imageUrl, setImageUrl] = useState<string>("");
   const [isCompressing, setIsCompressing] = useState<boolean>(false);
 
-  const updatePreviewImage = useCallback(
-    async (image: File, quality: number) => {
+  const originalSize = useMemo(() => selectedImage?.size ?? 0, [selectedImage]);
+
+  useEffect(() => {
+    if (!selectedImage) {
+      return;
+    }
+
+    let cancelled = false;
+
+    const updatePreviewImage = async () => {
       const options = {
         maxSizeMB: 1,
         maxWidthOrHeight: 1920,
         useWebWorker: true,
-        initialQuality: quality / 100,
+        initialQuality: compressionLevel / 100,
       };
 
       try {
-        const compressedBlob = await imageCompression(image, options);
-        setCompressedSize(compressedBlob.size);
+        const compressedBlob = await imageCompression(selectedImage, options);
+        if (cancelled) return;
 
-        const newUrl = URL.createObjectURL(compressedBlob);
-        if (imageUrl) URL.revokeObjectURL(imageUrl);
-        setImageUrl(newUrl);
+        setCompressedSize(compressedBlob.size);
+        setImageUrl(URL.createObjectURL(compressedBlob));
       } catch {
         // Preview compression failed
       }
-    },
-    [imageUrl]
-  );
+    };
+
+    void updatePreviewImage();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedImage, compressionLevel]);
 
   useEffect(() => {
-    if (selectedImage) {
-      setOriginalSize(selectedImage.size);
-      updatePreviewImage(selectedImage, compressionLevel);
+    if (!imageUrl) {
+      return;
     }
-  }, [selectedImage, compressionLevel, updatePreviewImage]);
 
-  useEffect(() => {
-    if (selectedImage) {
-      updatePreviewImage(selectedImage, compressionLevel);
-    }
-  }, [selectedImage, compressionLevel, updatePreviewImage]);
+    return () => {
+      URL.revokeObjectURL(imageUrl);
+    };
+  }, [imageUrl]);
 
   const compressImage = async () => {
     if (!selectedImage) return;

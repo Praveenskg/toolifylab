@@ -21,7 +21,7 @@ import {
   PoundSterling,
   RefreshCw,
 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface ExchangeRate {
   [key: string]: number;
@@ -54,10 +54,22 @@ export default function CurrencyConverter() {
   const [fromCurrency, setFromCurrency] = useState("USD");
   const [toCurrency, setToCurrency] = useState("EUR");
   const [exchangeRates, setExchangeRates] = useState<ExchangeRate>({});
-  const [convertedAmount, setConvertedAmount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [error, setError] = useState("");
+
+  const convertedAmount = useMemo(() => {
+    if (!exchangeRates[toCurrency] || !amount) {
+      return "";
+    }
+
+    const numAmount = parseFloat(amount);
+    if (isNaN(numAmount)) {
+      return "";
+    }
+
+    return (numAmount * exchangeRates[toCurrency]).toFixed(2);
+  }, [amount, toCurrency, exchangeRates]);
 
   const fetchExchangeRates = useCallback(async () => {
     setIsLoading(true);
@@ -120,20 +132,82 @@ export default function CurrencyConverter() {
   }, [fromCurrency]);
 
   useEffect(() => {
-    fetchExchangeRates();
-  }, [fetchExchangeRates]);
+    let cancelled = false;
 
-  useEffect(() => {
-    if (exchangeRates[toCurrency] && amount) {
-      const numAmount = parseFloat(amount);
-      if (!isNaN(numAmount)) {
-        const converted = (numAmount * exchangeRates[toCurrency]).toFixed(2);
-        setConvertedAmount(converted);
-      } else {
-        setConvertedAmount("");
+    const loadRates = async () => {
+      setIsLoading(true);
+      setError("");
+
+      try {
+        const apis = [
+          `https://api.frankfurter.app/latest?from=${fromCurrency}`,
+          `https://api.exchangerate-api.com/v4/latest/${fromCurrency}`,
+          `https://api.exchangerate.host/latest?base=${fromCurrency}`,
+        ];
+
+        let success = false;
+        let data;
+
+        for (const apiUrl of apis) {
+          try {
+            const response = await fetch(apiUrl);
+            if (response.ok) {
+              data = await response.json();
+              success = true;
+              break;
+            }
+          } catch {
+            continue;
+          }
+        }
+
+        if (!success) {
+          throw new Error("All APIs failed");
+        }
+
+        if (cancelled) {
+          return;
+        }
+
+        const rates = data.rates || data.conversion_rates || {};
+        setExchangeRates(rates);
+        setLastUpdated(new Date());
+      } catch {
+        if (cancelled) {
+          return;
+        }
+
+        setError("Failed to fetch live rates. Using cached rates.");
+
+        const mockRates: ExchangeRate = {
+          USD: 1,
+          EUR: 0.85,
+          GBP: 0.73,
+          JPY: 110.5,
+          INR: 74.5,
+          CAD: 1.25,
+          AUD: 1.35,
+          CHF: 0.92,
+          CNY: 6.45,
+          SGD: 1.35,
+          AED: 3.67,
+          NZD: 1.42,
+        };
+        setExchangeRates(mockRates);
+        setLastUpdated(new Date());
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
       }
-    }
-  }, [amount, toCurrency, exchangeRates]);
+    };
+
+    void loadRates();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [fromCurrency]);
 
   const handleSwapCurrencies = () => {
     setFromCurrency(toCurrency);

@@ -25,7 +25,17 @@ export function MobilePWAMenu() {
     showNotification,
   } = usePWA();
   const [isInstalling, setIsInstalling] = useState(false);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(() => {
+    try {
+      return (
+        typeof window !== "undefined" &&
+        localStorage.getItem("notifications") === "enabled" &&
+        Notification.permission === "granted"
+      );
+    } catch {
+      return false;
+    }
+  });
 
   const { theme, setTheme } = useTheme();
   const handleInstall = async () => {
@@ -64,13 +74,6 @@ export function MobilePWAMenu() {
 
   useEffect(() => {
     try {
-      const stored = localStorage.getItem("notifications");
-      const isGranted = Notification.permission === "granted";
-      if (stored === "enabled" && isGranted) {
-        setNotificationsEnabled(true);
-      } else {
-        setNotificationsEnabled(false);
-      }
       if (
         typeof window !== "undefined" &&
         isInstallable &&
@@ -80,7 +83,7 @@ export function MobilePWAMenu() {
         toast.info('To install this app on iOS, tap "Share" and then "Add to Home Screen".');
       }
     } catch {
-      setNotificationsEnabled(false);
+      // Ignore storage or permission access failures.
     }
   }, [isInstallable]);
 

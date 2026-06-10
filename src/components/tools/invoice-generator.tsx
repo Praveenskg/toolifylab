@@ -33,8 +33,8 @@ import {
   User,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { useCallback, useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useCallback, useState } from "react";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -113,6 +113,10 @@ const TAX_RATES = [
   { label: "25%", value: 25 },
 ];
 
+const DEFAULT_INVOICE_DATE = new Date();
+const DEFAULT_DUE_DATE = new Date(DEFAULT_INVOICE_DATE.getTime() + 30 * 24 * 60 * 60 * 1000);
+const DEFAULT_INVOICE_NUMBER = `INV-${DEFAULT_INVOICE_DATE.getTime()}`;
+
 // Zod validation schema
 const invoiceSchema = z.object({
   invoiceNumber: z.string().min(1, "Invoice number is required"),
@@ -164,16 +168,39 @@ type InvoiceFormData = z.infer<typeof invoiceSchema>;
 
 export default function InvoiceGenerator() {
   const [currentTab, setCurrentTab] = useState("create");
-  const [templates, setTemplates] = useState<InvoiceTemplate[]>([]);
+  const [templates, setTemplates] = useState<InvoiceTemplate[]>(() => {
+    try {
+      if (typeof window === "undefined") {
+        return [];
+      }
+
+      const savedTemplates = localStorage.getItem("invoice-templates");
+      if (!savedTemplates) {
+        return [];
+      }
+
+      const parsed = JSON.parse(savedTemplates);
+      return parsed.map((t: InvoiceTemplate) => ({
+        ...t,
+        data: {
+          ...t.data,
+          invoiceDate: new Date(t.data.invoiceDate),
+          dueDate: new Date(t.data.dueDate),
+        },
+      }));
+    } catch {
+      return [];
+    }
+  });
   const [selectedTemplate, setSelectedTemplate] = useState<string>("");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   const form = useForm<InvoiceFormData>({
     resolver: zodResolver(invoiceSchema),
     defaultValues: {
-      invoiceNumber: `INV-${Date.now()}`,
-      invoiceDate: new Date(),
-      dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      invoiceNumber: DEFAULT_INVOICE_NUMBER,
+      invoiceDate: DEFAULT_INVOICE_DATE,
+      dueDate: DEFAULT_DUE_DATE,
       currency: "USD",
       taxRate: 18,
       discount: 0,
@@ -207,33 +234,10 @@ export default function InvoiceGenerator() {
   const {
     control,
     handleSubmit,
-    watch,
     setValue,
     formState: { errors },
   } = form;
-  const watchedValues = watch();
-
-  // Load templates from localStorage
-  useEffect(() => {
-    const savedTemplates = localStorage.getItem("invoice-templates");
-    if (savedTemplates) {
-      try {
-        const parsed = JSON.parse(savedTemplates);
-        setTemplates(
-          parsed.map((t: InvoiceTemplate) => ({
-            ...t,
-            data: {
-              ...t.data,
-              invoiceDate: new Date(t.data.invoiceDate),
-              dueDate: new Date(t.data.dueDate),
-            },
-          }))
-        );
-      } catch {
-        setTemplates([]);
-      }
-    }
-  }, []);
+  const watchedValues = useWatch({ control }) as InvoiceFormData;
 
   // Save templates to localStorage
   const saveTemplates = useCallback((newTemplates: InvoiceTemplate[]) => {
@@ -527,7 +531,6 @@ export default function InvoiceGenerator() {
                               selected={field.value}
                               onSelect={field.onChange}
                               disabled={date => date > new Date() || date < new Date("1900-01-01")}
-                              initialFocus
                             />
                           </PopoverContent>
                         </Popover>
@@ -559,7 +562,6 @@ export default function InvoiceGenerator() {
                               selected={field.value}
                               onSelect={field.onChange}
                               disabled={date => date < new Date() || date < new Date("1900-01-01")}
-                              initialFocus
                             />
                           </PopoverContent>
                         </Popover>
@@ -580,7 +582,7 @@ export default function InvoiceGenerator() {
                       render={({ field }) => (
                         <Select
                           value={field.value.toString()}
-                          onValueChange={value => field.onChange(parseFloat(value))}
+                          onValueChange={(value: string) => field.onChange(parseFloat(value))}
                         >
                           <SelectTrigger>
                             <SelectValue placeholder="Select tax rate" />
@@ -971,7 +973,7 @@ export default function InvoiceGenerator() {
             <Button
               onClick={handleSubmit(onSubmit)}
               disabled={isGeneratingPDF}
-              className="min-w-[150px]"
+              className="min-w-37.5"
             >
               {isGeneratingPDF ? (
                 <>

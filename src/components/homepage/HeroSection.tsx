@@ -6,25 +6,21 @@ import { useMemo } from "react";
 export function HeroSection() {
   // Generate stable random values for particles
   const particles = useMemo(() => {
-    const generateRandom = () => {
-      const values: number[] = [];
-      for (let i = 0; i < 120; i++) {
-        values.push(Math.random());
-      }
-      return values;
-    };
-    const randoms = generateRandom();
-    let idx = 0;
     return Array.from({ length: 20 }, (_, i) => ({
       id: i,
-      x: randoms[idx++] * 100 - 50,
-      y: randoms[idx++] * 100 - 50,
-      duration: randoms[idx++] * 10 + 10,
-      delay: randoms[idx++] * 5,
-      left: randoms[idx++] * 100,
-      top: randoms[idx++] * 100,
+      x: seededRandom(i * 5 + 1) * 100 - 50,
+      y: seededRandom(i * 5 + 2) * 100 - 50,
+      duration: seededRandom(i * 5 + 3) * 10 + 10,
+      delay: seededRandom(i * 5 + 4) * 5,
+      left: seededRandom(i * 5 + 5) * 100,
+      top: seededRandom(i * 5 + 6) * 100,
     }));
   }, []);
+
+  function seededRandom(seed: number) {
+    const value = Math.sin(seed * 12.9898) * 43758.5453;
+    return value - Math.floor(value);
+  }
 
   return (
     <section className="from-background via-primary/5 to-background relative w-full overflow-hidden bg-linear-to-br py-16 sm:py-24 lg:py-32">

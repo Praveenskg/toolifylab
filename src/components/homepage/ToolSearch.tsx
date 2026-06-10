@@ -27,25 +27,21 @@ export function ToolSearch({
 
   // Generate stable random values for particles
   const particleConfigs = useMemo(() => {
-    const generateRandom = () => {
-      const values: number[] = [];
-      for (let i = 0; i < 32; i++) {
-        values.push(Math.random());
-      }
-      return values;
-    };
-    const randoms = generateRandom();
-    let idx = 0;
     return Array.from({ length: 8 }, (_, i) => ({
       id: i,
-      x: randoms[idx++] * 100 - 50,
-      y: randoms[idx++] * 100 - 50,
-      duration: randoms[idx++] * 2 + 2,
-      delay: randoms[idx++] * 2,
-      left: randoms[idx++] * 100,
-      top: randoms[idx++] * 100,
+      x: seededRandom(i * 5 + 1) * 100 - 50,
+      y: seededRandom(i * 5 + 2) * 100 - 50,
+      duration: seededRandom(i * 5 + 3) * 2 + 2,
+      delay: seededRandom(i * 5 + 4) * 2,
+      left: seededRandom(i * 5 + 5) * 100,
+      top: seededRandom(i * 5 + 6) * 100,
     }));
   }, []);
+
+  function seededRandom(seed: number) {
+    const value = Math.sin(seed * 12.9898) * 43758.5453;
+    return value - Math.floor(value);
+  }
 
   return (
     <motion.div

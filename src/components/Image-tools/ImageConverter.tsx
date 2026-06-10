@@ -1,7 +1,7 @@
 import imageCompression from "browser-image-compression";
 import { Download, FileImage, ImagePlay, Loader2 } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Label } from "../ui/label";
@@ -13,21 +13,23 @@ export default function ImageConverter({ selectedImage }: { selectedImage: File 
   const [quality, setQuality] = useState<number>(90);
   const [imageUrl, setImageUrl] = useState<string>("");
   const [isConverting, setIsConverting] = useState<boolean>(false);
-  const [originalSize, setOriginalSize] = useState<number>(0);
   const [compressedSize, setCompressedSize] = useState<number>(0);
-  const [originalFormat, setOriginalFormat] = useState<string>("");
   const [convertedFormat, setConvertedFormat] = useState<string>("");
+  const originalSize = useMemo(() => selectedImage?.size ?? 0, [selectedImage]);
+  const originalFormat = useMemo(() => selectedImage?.type.split("/")[1] ?? "", [selectedImage]);
 
   useEffect(() => {
-    if (selectedImage) {
-      const url = URL.createObjectURL(selectedImage);
-      setImageUrl(url);
-      setOriginalSize(selectedImage.size);
-      setOriginalFormat(selectedImage.type.split("/")[1]);
-      setCompressedSize(0); // reset on new image
-      setConvertedFormat(""); // reset on new image
-      return () => URL.revokeObjectURL(url);
+    if (!selectedImage) {
+      return;
     }
+
+    const url = URL.createObjectURL(selectedImage);
+
+    Promise.resolve().then(() => {
+      setImageUrl(url);
+    });
+
+    return () => URL.revokeObjectURL(url);
   }, [selectedImage]);
 
   const getSizeReduction = () => {

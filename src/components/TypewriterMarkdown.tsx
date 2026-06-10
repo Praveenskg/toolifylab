@@ -11,10 +11,13 @@ type Props = {
 };
 
 export const TypewriterMarkdown = ({ text, speed = 10 }: Props) => {
+  return <TypewriterMarkdownInner key={text} text={text} speed={speed} />;
+};
+
+const TypewriterMarkdownInner = ({ text, speed = 10 }: Props) => {
   const [displayedText, setDisplayedText] = useState("");
 
   useEffect(() => {
-    setDisplayedText(""); // Reset displayed text when text changes
     let i = 0;
     let interval: NodeJS.Timeout | null = null;
 

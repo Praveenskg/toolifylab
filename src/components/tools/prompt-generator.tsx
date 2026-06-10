@@ -17,7 +17,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Markdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import removeMarkdown from "remove-markdown";
@@ -53,12 +53,18 @@ export default function GeneratePrompt() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
-  const [history, setHistory] = useState<PromptHistoryItem[]>([]);
+  const [history, setHistory] = useState<PromptHistoryItem[]>(() => {
+    try {
+      if (typeof window === "undefined") {
+        return [];
+      }
 
-  useEffect(() => {
-    const stored = localStorage.getItem("prompt-history");
-    if (stored) setHistory(JSON.parse(stored));
-  }, []);
+      const stored = localStorage.getItem("prompt-history");
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
 
   const saveToHistory = (item: PromptHistoryItem) => {
     const updatedHistory = [item, ...history].slice(0, 10);
