@@ -17,5 +17,6 @@ onlyBuiltDependencies:
   - unrs-resolver
 
 overrides:
-  serialize-javascript: ">=7.0.3"
-  dompurify: ">=3.3.2"
+  dompurify: "^3.4.0"
+  postcss: "^8.5.10"
+  serialize-javascript: "^7.0.3"
