@@ -7,13 +7,15 @@ on:
     branches: [main]
   workflow_dispatch:
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   NODE_VERSION: "24"
+  PNPM_VERSION: "11.5.2"
 
 jobs:
-  # -------------------------------
-  # Job 1: TypeScript Type Check
-  # -------------------------------
   typescript:
     name: TypeScript Type Check
     runs-on: ubuntu-latest
@@ -26,23 +28,26 @@ jobs:
       - uses: actions/checkout@v7
 
       - uses: pnpm/action-setup@v6
+        with:
+          version: ${{ env.PNPM_VERSION }}
 
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install Dependencies
         env:
           HUSKY: 0
-        run: pnpm install --frozen-lockfile --prefer-offline
+        run: pnpm install --frozen-lockfile
 
       - name: TypeScript Type Check
-        run: pnpm run type-check
+        run: pnpm type-check
 
-  # -------------------------------
-  # Job 2: ESLint
-  # -------------------------------
+      - name: Build Project
+        run: pnpm build
+
   eslint:
     name: ESLint Code Quality
     runs-on: ubuntu-latest
@@ -55,23 +60,23 @@ jobs:
       - uses: actions/checkout@v7
 
       - uses: pnpm/action-setup@v6
+        with:
+          version: ${{ env.PNPM_VERSION }}
 
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install Dependencies
         env:
           HUSKY: 0
-        run: pnpm install --frozen-lockfile --prefer-offline
+        run: pnpm install --frozen-lockfile
 
       - name: ESLint
-        run: pnpm run lint
+        run: pnpm lint
 
-  # -------------------------------
-  # Job 3: Prettier
-  # -------------------------------
   prettier:
     name: Prettier Formatting
     runs-on: ubuntu-latest
@@ -84,23 +89,23 @@ jobs:
       - uses: actions/checkout@v7
 
       - uses: pnpm/action-setup@v6
+        with:
+          version: ${{ env.PNPM_VERSION }}
 
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install Dependencies
         env:
           HUSKY: 0
-        run: pnpm install --frozen-lockfile --prefer-offline
+        run: pnpm install --frozen-lockfile
 
-      - name: Prettier
-        run: pnpm run format:check
+      - name: Check Formatting
+        run: pnpm format:check
 
-  # -------------------------------
-  # Job 4: Security Audit
-  # -------------------------------
   security:
     name: Security Audit
     runs-on: ubuntu-latest
@@ -110,39 +115,45 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v5
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
 
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install Dependencies
         env:
           HUSKY: 0
-        run: pnpm install --frozen-lockfile --prefer-offline
+        run: pnpm install --frozen-lockfile
 
       - name: Security Audit
         run: pnpm audit --audit-level=moderate
+        continue-on-error: true
 
-  # -------------------------------
-  # Job 5: PR Comment Bot
-  # -------------------------------
   pr-comment:
     name: PR Status Comment
     runs-on: ubuntu-latest
-    needs: [typescript, eslint, prettier, security]
-    # Run even when a needed job failed so the PR always gets a status comment (with pass/fail)
-    if: always() && github.event_name == 'pull_request' && !cancelled()
+
+    needs:
+      - typescript
+      - eslint
+      - prettier
+      - security
+
+    if: always() && github.event_name == 'pull_request'
 
     permissions:
       pull-requests: write
 
     steps:
-      - name: Update PR with CI Results
-        uses: actions/github-script@v9
+      - name: Update PR Comment
+        uses: actions/github-script@v8
         with:
           script: |
             const checks = [
@@ -152,52 +163,50 @@ jobs:
               { name: "Security Audit", status: "${{ needs.security.result }}" },
             ];
 
-            const iconMap = {
+            const icons = {
               success: "✅ Passed",
               failure: "❌ Failed",
               cancelled: "🚫 Cancelled",
               skipped: "⏭️ Skipped",
             };
 
-            const icon = (s) => iconMap[s] || "⏳ Running";
+            const body = `## 🚀 CI Results
 
-            const body = `##  CI Results
-
-            ${checks.map(c => `- **${c.name}**: ${icon(c.status)}`).join("\n")}
+            ${checks
+              .map(c => `- **${c.name}**: ${icons[c.status] || c.status}`)
+              .join("\n")}
 
             ---
-            **Commit**: \`${{ github.sha }}\`
-            **Branch**: \`${{ github.head_ref }}\`
-            **Author**: @${{ github.actor }}
-            `;
+            **Commit:** \`${{ github.sha }}\`
+            **Branch:** \`${{ github.head_ref || github.ref_name }}\`
+            **Author:** @${{ github.actor }}
+
+            _This comment is automatically updated._`;
 
             const { owner, repo } = context.repo;
             const issue_number = context.issue.number;
 
-            // Fetch existing comments
-            const { data: comments } = await github.rest.issues.listComments({
-              owner,
-              repo,
-              issue_number,
-            });
+            const { data: comments } =
+              await github.rest.issues.listComments({
+                owner,
+                repo,
+                issue_number,
+              });
 
-            // Find existing CI comment
             const existing = comments.find(
-              (comment) =>
-                comment.user.type === "Bot" &&
-                comment.body.includes("##  CI Results")
+              c =>
+                c.user.type === "Bot" &&
+                c.body.includes("## 🚀 CI Results")
             );
 
             if (existing) {
-              // Update existing comment
               await github.rest.issues.updateComment({
                 owner,
                 repo,
                 comment_id: existing.id,
-                body: body + "\n\n📌 _This comment is auto-updated_",
+                body,
               });
             } else {
-              // Create new comment
               await github.rest.issues.createComment({
                 owner,
                 repo,
