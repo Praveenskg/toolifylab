@@ -4,7 +4,7 @@ Allow: /
 Disallow: /api/
 
 # Host
-Host: https://tools.praveensingh.online
+Host: https://tools.praveenskg.in
 
 # Sitemaps
-Sitemap: https://tools.praveensingh.online/sitemap.xml
+Sitemap: https://tools.praveenskg.in/sitemap.xml
