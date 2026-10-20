@@ -17,6 +17,34 @@ onlyBuiltDependencies:
   - unrs-resolver
 
 overrides:
-  dompurify: "^3.4.0"
-  postcss: "^8.5.10"
+  "brace-expansion@<2": "1.1.21"
+  "brace-expansion@>=3": "5.0.12"
+  dompurify: ">=3.4.16"
+  nanoid: "^3.3.18"
+  postcss: ">=8.5.23"
+  protobufjs: "^7.6.5"
   serialize-javascript: "^7.0.3"
+  source-map-js: ">=1.2.2"
+
+audit:
+  ignore:
+    # braces <=3.0.3 has no patched release (GHSA-vfj7-8cjw-p6xm)
+    - GHSA-vfj7-8cjw-p6xm
+
+# Published <24h; required for local/CI lockfile verification
+minimumReleaseAgeExclude:
+  - framer-motion@14.4.0
+  - lucide-react@1.60.0
+  - motion-dom@14.4.0
+  - motion@14.4.0
+  - "@typescript-eslint/eslint-plugin@8.72.0"
+  - "@typescript-eslint/parser@8.72.0"
+  - "@typescript-eslint/project-service@8.72.0"
+  - "@typescript-eslint/scope-manager@8.72.0"
+  - "@typescript-eslint/tsconfig-utils@8.72.0"
+  - "@typescript-eslint/type-utils@8.72.0"
+  - "@typescript-eslint/types@8.72.0"
+  - "@typescript-eslint/typescript-estree@8.72.0"
+  - "@typescript-eslint/utils@8.72.0"
+  - "@typescript-eslint/visitor-keys@8.72.0"
+  - typescript-eslint@8.72.0
