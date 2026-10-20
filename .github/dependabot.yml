@@ -1,33 +1,88 @@
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 version: 2
+
 updates:
-  - package-ecosystem: github-actions
-    directory: /
+  # pnpm lockfile is handled via the npm ecosystem
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
-      interval: weekly
-    groups:
-      actions-all:
-        patterns:
-          - "*"
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+      timezone: "Asia/Kolkata"
+    open-pull-requests-limit: 10
     labels:
       - "dependencies"
-      - "automerge"
-    reviewers:
-      - "praveenskg"
-
-  - package-ecosystem: pnpm
-    directory: /
-    schedule:
-      interval: weekly
+    commit-message:
+      prefix: "chore"
+      include: "scope"
     ignore:
       - dependency-name: "@types/node"
-        update-types:
-          - "version-update:semver-major"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
+        versions: [">=6.1.0"]
     groups:
-      pnpm-all:
+      next-ecosystem:
+        patterns:
+          - "next"
+          - "eslint-config-next"
+          - "@next/*"
+      react-ecosystem:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+      serwist:
+        patterns:
+          - "serwist"
+          - "@serwist/*"
+      production:
+        dependency-type: "production"
         patterns:
           - "*"
+        exclude-patterns:
+          - "next"
+          - "eslint-config-next"
+          - "@next/*"
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+          - "serwist"
+          - "@serwist/*"
+      development:
+        dependency-type: "development"
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "next"
+          - "eslint-config-next"
+          - "@next/*"
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+          - "serwist"
+          - "@serwist/*"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+      timezone: "Asia/Kolkata"
     labels:
       - "dependencies"
-      - "automerge"
-    reviewers:
-      - "praveenskg"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
