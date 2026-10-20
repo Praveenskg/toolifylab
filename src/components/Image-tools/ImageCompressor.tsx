@@ -186,13 +186,13 @@ export default function ImageCompressor({ selectedImage }: { selectedImage: File
                 </CardHeader>
                 <CardContent className="flex flex-1 items-center justify-center">
                   {imageUrl ? (
-                    <div className="relative max-h-[400px] max-w-full overflow-hidden rounded border">
+                    <div className="relative max-h-100 max-w-full overflow-hidden rounded border">
                       <Image
                         src={imageUrl}
                         height={400}
                         width={400}
                         alt="Preview"
-                        className="h-auto max-h-[400px] w-auto object-contain"
+                        className="h-auto max-h-100 w-auto object-contain"
                       />
                     </div>
                   ) : (

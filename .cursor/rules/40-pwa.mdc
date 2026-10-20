@@ -1,0 +1,36 @@
+---
+description: Serwist service worker, manifest, and install UX
+globs:
+  - src/app/sw.ts
+  - src/app/manifest.json
+  - src/hooks/use-pwa.ts
+  - src/components/pwa-install-button.tsx
+  - src/components/InstallBanner.tsx
+  - src/components/offline-indicator.tsx
+  - src/components/mobile-pwa-menu.tsx
+  - src/components/unregister.tsx
+  - next.config.ts
+alwaysApply: false
+---
+
+# PWA
+
+Serwist only (`@serwist/next` + `serwist`). `next.config.ts` uses `withSerwistInit({ swSrc: "src/app/sw.ts", swDest: "public/sw.js" })`, disabled outside production. Production uses `next build --webpack` because `@serwist/next` does not support Turbopack. Do not add Workbox, next-pwa, `@serwist/turbopack`, or another SW stack.
+
+## Preserve
+
+- `src/app/sw.ts`: precache `__SW_MANIFEST`, `skipWaiting`, `clientsClaim`, `navigationPreload`, `defaultCache`
+- Registration via `@serwist/next` — do not break it; `unregister.tsx` exists for a reason
+- `start_url: "/"` and `scope: "/"` unless there is a concrete reason to change
+- Install UX: `usePWA`, `InstallBanner`, `PWAInstallButton`, `mobile-pwa-menu`
+- Offline: `offline-indicator` + Serwist runtime cache
+- Notifications: `requestNotificationPermission` / `showNotification` on `usePWA` — do not remove
+- `theme_color` / viewport theme: `#7c3aed`. `background_color`: `#ffffff`
+- `display: standalone`, `orientation: portrait-primary`
+- Manifest shortcuts (EMI, QR, Goal Tracker) and existing icon files (`maskable_icon*.png`, `/icon-192x192.png`, `/apple-touch-icon.png`, shortcut PNGs)
+
+## Identity
+
+Current `name` / `short_name` are ToolifyLab. When updating the manifest, identify the product as **Smart Tools** (`name` + `short_name`). Do not change naming as a drive-by during unrelated SW work. Use existing Smart Tools/app icons — never framework default icons.
+
+After PWA changes: `pnpm build` (webpack) so `public/sw.js` regenerates; smoke-check install, offline, and that the worker still registers. Use `pnpm dev:pwa` to test PWA locally with webpack.

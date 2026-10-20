@@ -4,10 +4,16 @@ import Header from "@/components/header";
 import { InstallBanner } from "@/components/InstallBanner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { cn } from "@/lib/utils";
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Noto_Sans } from "next/font/google";
 import "./globals.css";
+
+const notoSansHeading = Noto_Sans({ subsets: ["latin"], variable: "--font-heading" });
+
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -131,7 +137,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={geistSans.variable + " " + geistMono.variable}
+      className={cn(
+        geistSans.variable + " " + geistMono.variable,
+        "font-sans",
+        geist.variable,
+        notoSansHeading.variable
+      )}
       suppressHydrationWarning
       data-scroll-behavior="smooth"
     >

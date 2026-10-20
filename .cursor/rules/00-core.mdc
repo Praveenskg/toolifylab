@@ -1,0 +1,50 @@
+---
+description: Core Smart Tools / ToolifyLab conventions for every task
+alwaysApply: true
+---
+
+# Core
+
+Product: **Smart Tools** — free online utility/productivity tools (calculators, converters, generators, trackers).
+Repo/project: **ToolifyLab**. No admin app. Do not introduce admin-console concepts.
+
+Current UI copy, metadata, and PWA strings still say ToolifyLab. Do not mass-rebrand unless the task explicitly asks. When writing new user-facing product naming, prefer Smart Tools; keep ToolifyLab as project/company.
+
+## Stack (reuse; do not add parallels)
+
+- Next.js 16 App Router, React 19, TypeScript (`strict`), pnpm, alias `@/*` → `src/*`
+- Tailwind v4 tokens in `src/app/globals.css` (`@theme inline`); no `tailwind.config`
+- shadcn/ui (new-york) + Radix + CVA + `cn()` from `src/lib/utils.ts`
+- Icons: Lucide (`components.json` `iconLibrary: lucide`). `react-icons` only in footer socials
+- Motion (`motion/react`) already in use — do not add another animation library
+- Forms: react-hook-form + Zod where present. Toasts: sonner. Theme: next-themes, `defaultTheme="light"`
+- PWA: Serwist (`@serwist/next`). Sitemap: next-sitemap. Analytics: `@vercel/analytics`
+
+Do not add MUI, Chakra, another CSS framework, another icon set, another PWA library, or a second catalog/search/SEO system.
+
+## Architecture
+
+- Routes: `src/app/{tool-id}/page.tsx` (metadata + page shell)
+- Tool UI: `src/components/tools/`; image tools: `src/components/Image-tools/`
+- Home discovery: `src/components/homepage/`
+- Primitives: `src/components/ui/`
+- Catalog: `src/lib/tools.ts` — source of truth for tools/categories
+- Shared helpers: `src/lib/utils.ts` (`cn`, formatters, `calculateEMI`, `calculateAge`, storage)
+- API: only `src/app/api/generate-prompt/route.ts` (Gemini). Calculators run client-side
+
+Prefer Server Components. Use `'use client'` only for interactive tools/chrome. Keep components small. Reuse existing hooks (`src/hooks/`) and UI primitives.
+
+## Behavior
+
+- Preserve existing functionality, formulas, routes, and data shapes
+- Smallest clean change. Inspect relevant files before coding
+- Accessible: labels, focus-visible rings, `aria-*`, 44px touch targets (`.touch-target`)
+- Responsive: mobile-first; do not hide primary tool actions to save space
+- Loading / empty / error: use existing `loading`, `skeleton`, `sonner`, `error-boundary`, `not-found`
+- Security: never expose `GEMINI_API_KEY` or secrets; validate API input; keep `poweredByHeader: false`
+- Do not fabricate user counts, ratings, usage stats, or testimonials
+
+## Validation
+
+After changes, run what you touched: `pnpm type-check`, `pnpm lint`, `pnpm format:check`. Full gate: `pnpm validate`.
+No test suite exists; if calculation logic changes, add tests rather than silently altering formulas.

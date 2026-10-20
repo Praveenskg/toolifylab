@@ -1,0 +1,60 @@
+---
+description: Tool catalog, cards, categories, and calculator page UI
+globs:
+  - src/lib/tools.ts
+  - src/lib/utils.ts
+  - src/components/tools/**
+  - src/components/Image-tools/**
+  - src/components/homepage/HomePageClient.tsx
+  - src/components/homepage/FeaturedTools.tsx
+  - src/components/homepage/ToolGrid.tsx
+  - src/components/homepage/ToolSearch.tsx
+  - src/components/TimePickerColumn.tsx
+  - src/app/*/page.tsx
+  - src/app/*/client.tsx
+alwaysApply: false
+---
+
+# Tools UI
+
+Catalog source of truth: `src/lib/tools.ts` (`id`, `name`, `description`, `icon`, `category`, `popular`).
+Home directory lives on `/` (`HomePageClient`) — there is no separate `/tools` route, sidebar, sort control, or grid/list toggle. Do not add those unless asked. `src/components/ui/sidebar.tsx` is a shadcn primitive, not a tools nav.
+
+Visual tokens: follow the design-system rule / `globals.css`. Do not invent a second look.
+
+## Directory (existing)
+
+- Search: `ToolSearch` + `InputGroup`. Placeholder “Search tools, calculators, converters…”. No keyboard-shortcut search exists — do not invent one or a second search stack
+- Category pills from `HomePageClient`: All Tools, Financial, Health, Date & Time, Math, Conversion, Planning, Utility (counts from catalog)
+- `tools.ts` also has AI Tools, Security, Business — only show categories the UI actually supports; do not invent Calculators / Fun / Developer
+- Featured/popular: `popular: true` via `FeaturedTools` / ⭐ Popular badge. Do not fabricate usage numbers
+
+## Tool card
+
+Keep one component structure (`ToolGrid` / `FeaturedTools`). When adding or restyling:
+
+1. Lucide icon (pastel well when restyling)
+2. Category badge
+3. Tool name
+4. Short description
+5. Popular badge only if `popular`
+6. Clear action (link to `/{id}`; “Use Tool” copy only if adding a CTA)
+7. Chevron
+
+Do not overcrowd. Do not invent trending/usage stats.
+
+## Tool pages
+
+Pattern: `src/app/{id}/page.tsx` shell + `src/components/tools/{id}.tsx` (or `Image-tools/`).
+
+Existing shell: gradient title, muted subtitle, “Back to Home”, `Card` wrapping the tool. Keep that ecosystem.
+
+Prefer: title, short explanation, inputs, results, validation/errors (sonner/inline), reset where it already exists (e.g. GST), related tools only if adding them from `tools.ts`. Responsive: stack on mobile; `lg:grid-cols-2` input | result where already used.
+
+Do not redesign calculation logic while changing UI.
+
+## Financial / math
+
+Reuse `calculateEMI`, `calculateAge`, `formatCurrency`, `formatNumber` in `src/lib/utils.ts`. EMI/GST precision and INR/`en-IN` formatting stay as-is. Formulas live in the tool components — do not “simplify” for visuals. No test suite yet; if you change calc behavior, add tests.
+
+Client-only tools: persist via existing `getFromStorage` / `setToStorage` helpers where already used (todo, goals). Do not add a backend for calculators.

@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "dev:pwa": "next dev --webpack",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
@@ -24,6 +25,7 @@
     "pre-commit": "lint-staged"
   },
   "dependencies": {
+    "@base-ui/react": "^1.8.0",
     "@google/genai": "^2.30.0",
     "@hookform/resolvers": "^5.9.1",
     "@serwist/next": "^9.5.13",
@@ -32,6 +34,7 @@
     "browser-image-compression": "^2.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cn": "^0.2.6",
     "date-fns": "^4.4.0",
     "dayjs": "^1.11.23",
     "exifr": "^7.1.3",
@@ -56,6 +59,7 @@
     "recharts": "^3.10.1",
     "rehype-highlight": "^7.0.2",
     "remove-markdown": "^0.8.0",
+    "shadcn": "^4.21.0",
     "sonner": "^2.0.8",
     "tailwind-merge": "^3.7.0",
     "zod": "^4.6.7"
@@ -83,7 +87,7 @@
     "typescript-eslint": "^8.71.2"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": ["eslint --fix", "prettier --write"],
+    "*.{js,jsx,ts,tsx}": ["eslint --fix --no-warn-ignored", "prettier --write"],
     "*.{json,md,css,html}": ["prettier --write"]
   }
 }

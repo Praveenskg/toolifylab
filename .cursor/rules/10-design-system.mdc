@@ -1,0 +1,59 @@
+---
+description: Smart Tools visual language, tokens, and UI chrome
+globs:
+  - src/app/globals.css
+  - src/app/layout.tsx
+  - src/app/not-found.tsx
+  - src/components/ui/**
+  - src/components/homepage/**
+  - src/components/header.tsx
+  - src/components/footer.tsx
+  - src/components/theme-provider.tsx
+  - src/components/theme-toggle.tsx
+  - src/components/loading.tsx
+  - src/components/error-boundary.tsx
+  - src/components/BackToTopButton.tsx
+  - src/components/InstallBanner.tsx
+  - components.json
+alwaysApply: false
+---
+
+# Design system
+
+Light, bright SaaS/tool-directory. White/very-light surfaces, generous whitespace, rounded cards, subtle shadows, soft pastel accents. Purple/indigo is the brand accent. Friendly and uncluttered.
+
+Do not redesign the app. Match this language when adding or restyling UI. Do not introduce an unrelated identity, heavy glassmorphism, or neon/dark-first themes. `next-themes` dark mode already exists — keep it working via semantic tokens; do not make dark the default.
+
+## Tokens (do not invent a second palette)
+
+Define/extend CSS variables in `src/app/globals.css`. Prefer Tailwind semantic classes: `bg-background`, `bg-card`, `text-foreground`, `text-muted-foreground`, `text-primary`, `bg-primary`, `border-border`, `ring-ring`.
+
+Existing:
+
+- Primary: `--primary` (violet/purple, ~`#7c3aed` / oklch 292°)
+- Neutrals: white `--background`/`--card`; navy `--foreground`; muted body `--muted-foreground`; soft `--border`
+- Radius: `--radius: 0.75rem` → `rounded-md` controls, `rounded-xl` cards, `rounded-full` pills
+- Shadow: `shadow-sm` / `shadow-md`; hover `shadow-primary/10`–`/20`. No heavy dark shadows
+- Font: Geist (`--font-geist-sans`) + Geist Mono. Do not add decorative fonts
+
+Pastel accents (icon wells, chips — not raw hex sprinkled in components): lavender/purple, soft blue, mint, peach, pink/rose, light teal. Reuse `primary/10`, `indigo-500/10`, `purple-500/10`, `emerald-400/20` style washes already on the home hero.
+
+Heading highlight: `bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent` (header, hero, tool titles). Do not put that gradient on every button/card.
+
+Reuse existing utilities before writing new CSS: `gradient-text`, `modern-card`, `hover-lift`, `touch-target`, `p-responsive-*`, `text-responsive-*`. Prefer `Button` / `Card` / `Badge` / `Input` from `src/components/ui/`.
+
+## Shape and cards
+
+Rounded search fields, CTAs, category pills, icon containers. Avoid sharp rectangles.
+
+Default discovery card: light `bg-card`, `rounded-xl`, subtle border/shadow, pastel icon well, clear title, muted description, small category/popular badge, chevron/CTA, comfortable padding. Variants allowed when hierarchy needs them.
+
+## Motion and layout
+
+Subtle hover lift/fade only. Respect `prefers-reduced-motion`. Do not add animation libraries; `motion/react` is already the one.
+
+Home (existing): spacious hero → featured tools → search + category pills → tool grid → newsletter → footer. Keep search in `ToolSearch` — do not add a second search. Header is sticky, light, backdrop-blur; footer is light with purple accent and categorized links.
+
+Responsive: desktop multi-column; tablet fewer columns; mobile 1–2 card columns; stack search/filters; collapse nav; keep tool actions visible.
+
+Hero atmosphere: soft indigo/purple/pink gradient orbs on a light background. Stats may use real product facts already on the page (`18+` tools, free, PWA) — never fake social proof.

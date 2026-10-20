@@ -1,0 +1,42 @@
+---
+description: Metadata, canonical URLs, sitemap, and structured data
+globs:
+  - src/app/layout.tsx
+  - src/app/page.tsx
+  - src/app/not-found.tsx
+  - src/app/*/page.tsx
+  - src/hooks/use-seo.ts
+  - src/hooks/use-dynamic-title.ts
+  - next-sitemap.config.js
+  - public/robots.txt
+alwaysApply: false
+---
+
+# SEO
+
+Reuse Next.js Metadata API on App Router pages. Do not add a second SEO stack. `useSEO` / `use-dynamic-title` are client helpers — prefer `export const metadata` (or `generateMetadata`) on pages.
+
+## Brand and titles
+
+- Product name in new/updated metadata: **Smart Tools**
+- **ToolifyLab** only as project/company/publisher when that relationship is accurate
+- Do not mass-rewrite existing titles unless the task is SEO/branding
+- Root template in `layout.tsx` is `%s - ToolifyLab`. If you change brand suffix, update `title.template` together so titles do not become `Smart Tools - ToolifyLab`
+- Prefer unique tool titles: `EMI Calculator`, `GST Calculator` (template appends brand). Target style when updating the template: `EMI Calculator | Smart Tools`
+- 404 stays `robots: { index: false, follow: false }`
+
+## Canonical and indexing
+
+- Canonical domain: `process.env.SITE_URL` with fallback `https://tools.praveensingh.online` (matches `layout.tsx`)
+- Do not invent a third domain. `next-sitemap.config.js` currently falls back to `tools.praveenskg.in` — do not “fix” that unless asked
+- Reuse `alternates.canonical`, `metadataBase`, existing `robots` / `next-sitemap` (`postbuild`). Keep `/api/*` out of the sitemap
+- No hosting-provider branding in user-facing metadata
+- Preserve index/follow unless explicitly changing indexing
+
+## Content
+
+- Unique title + description per tool. No keyword stuffing, hidden SEO text, or duplicate canonical/schema
+- Keywords: short, relevant; do not dump the whole catalog on every page
+- Open Graph / Twitter: reuse `/og-image.png` or existing `/og/{tool}.png` paths; `siteName` consistent with the chosen product name
+- Structured data: homepage already has `WebSite` + `ItemList`. `generateToolStructuredData` in `use-seo.ts` is `WebApplication`. Add Organization/WebSite only when accurate
+- Never invent reviews, ratings, social profiles, addresses, or organization details. Publisher/author already used: ToolifyLab / Praveen Singh — do not fabricate extras
