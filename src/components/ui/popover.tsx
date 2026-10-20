@@ -4,12 +4,24 @@ import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 import { cn } from "cn";
 import * as React from "react";
 
+import { splitAsChild, type AsChildProp } from "@/components/ui/as-child";
+
 function Popover({ ...props }: PopoverPrimitive.Root.Props) {
   return <PopoverPrimitive.Root data-slot="popover" {...props} />;
 }
 
-function PopoverTrigger({ ...props }: PopoverPrimitive.Trigger.Props) {
-  return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />;
+function PopoverTrigger({
+  asChild,
+  children,
+  ...props
+}: PopoverPrimitive.Trigger.Props & AsChildProp) {
+  return (
+    <PopoverPrimitive.Trigger
+      data-slot="popover-trigger"
+      {...props}
+      {...splitAsChild(asChild, children)}
+    />
+  );
 }
 
 function PopoverContent({

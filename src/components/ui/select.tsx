@@ -5,7 +5,22 @@ import { cn } from "cn";
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import * as React from "react";
 
-const Select = SelectPrimitive.Root;
+function Select<Value = string, Multiple extends boolean | undefined = false>({
+  onValueChange,
+  ...props
+}: Omit<SelectPrimitive.Root.Props<Value, Multiple>, "onValueChange"> & {
+  onValueChange?: (value: Multiple extends true ? Value[] : Value) => void;
+}) {
+  return (
+    <SelectPrimitive.Root
+      {...props}
+      onValueChange={value => {
+        if (value == null) return;
+        onValueChange?.(value as Multiple extends true ? Value[] : Value);
+      }}
+    />
+  );
+}
 
 function SelectGroup({ className, ...props }: SelectPrimitive.Group.Props) {
   return (

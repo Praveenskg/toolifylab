@@ -1,19 +1,31 @@
 import { Slider as SliderPrimitive } from "@base-ui/react/slider";
 import { cn } from "cn";
 
+type SliderProps = Omit<
+  SliderPrimitive.Root.Props<number[]>,
+  "onValueChange" | "onValueCommitted"
+> & {
+  onValueChange?: (value: number[]) => void;
+  onValueCommitted?: (value: number[]) => void;
+};
+
 function Slider({
   className,
   defaultValue,
   value,
   min = 0,
   max = 100,
+  onValueChange,
+  onValueCommitted,
   ...props
-}: SliderPrimitive.Root.Props) {
+}: SliderProps) {
   const _values = Array.isArray(value)
     ? value
     : Array.isArray(defaultValue)
       ? defaultValue
       : [min, max];
+
+  const toArray = (next: number | readonly number[]) => (Array.isArray(next) ? [...next] : [next]);
 
   return (
     <SliderPrimitive.Root
@@ -24,6 +36,8 @@ function Slider({
       min={min}
       max={max}
       thumbAlignment="edge"
+      onValueChange={next => onValueChange?.(toArray(next))}
+      onValueCommitted={next => onValueCommitted?.(toArray(next))}
       {...props}
     >
       <SliderPrimitive.Control className="relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:min-h-40 data-vertical:w-auto data-vertical:flex-col">
